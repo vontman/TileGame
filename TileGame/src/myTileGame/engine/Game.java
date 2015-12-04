@@ -22,25 +22,54 @@ public class Game implements Runnable{
 	private int height;
 	private int width;
 	private boolean running;
+	int counter = 0;
+	double lol = 0;
 	public Game(int width,int height){
 		this.width = width;
 		this.height = height;
 		running = true;
 		init();
-		render();
+		Thread thread = new Thread(this);
+		thread.run();
 	}
 	public void tick(){
-		
+		keyManager.tick();
+		world.tick();
+//		counter++;
+//		double fps = 30;
+//		double timePerFrame = 1e9/fps;
+//		lol += timePerFrame;
+//		if(lol >= 1e9){
+//			lol -= 1e9;
+//			System.out.println(counter);
+//			counter = 0;
+//		}
 	}
 	public void render(){
 		getGui().getGraphics().clearRect(0, 0,width, height);
 		world.render(getGui().getGraphics());
 	}
 	public synchronized void start(){
-		
 	}
 	public synchronized void stop(){
-		
+	}
+	@Override
+	public void run() {
+		double now = System.nanoTime();
+		double last = System.nanoTime();
+		double timer = 0;
+		double fps = 60;
+		double timePerFrame = 1e9/fps;
+		while( running ){
+			now = System.nanoTime();
+			timer += now - last;
+			if(timer >= timePerFrame){
+				timer -= timePerFrame;
+				tick();
+				render();
+			}
+			last = now;
+		}
 	}
 	private void init(){
 		Assets.init();
@@ -49,7 +78,7 @@ public class Game implements Runnable{
 		keyManager = new KeyManager();
 		gui = new Gui(handler);
 		camera = new Camera(handler);
-		world = new TestWorld("/worlds/testworld.txt");
+		world = new TestWorld(handler);
 	}
 	public int getHeight() {
 		return height;
@@ -72,9 +101,5 @@ public class Game implements Runnable{
 	public Gui getGui() {
 		return gui;
 	}
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

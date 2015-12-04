@@ -2,12 +2,15 @@ package myTileGame.world;
 
 import java.awt.Graphics;
 
+import myTileGame.Handler;
 import myTileGame.tiles.Tile;
 
 public abstract class World {
 	protected WorldInfo worldInfo;
-	public World(String path){
-		worldInfo = WorldLoader.loadWorld(path);
+	protected int counter = 0;
+	protected Handler handler;
+	public World(Handler handler){
+		worldInfo = WorldLoader.loadWorld("/worlds/"+this.getClass().getSimpleName()+".txt");
 	}
 	public void tick(){
 		
