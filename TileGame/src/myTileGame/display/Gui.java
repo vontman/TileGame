@@ -27,6 +27,7 @@ public class Gui {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(handler.getGame().getKeyManager());
+		frame.setResizable(false);
 		
 		canvas = new Canvas();
 		frame.setSize(width, height);
@@ -40,10 +41,7 @@ public class Gui {
 		
 		frame.setVisible(true);
 	}
-	public Graphics getGraphics(){
-		return canvas.getGraphics();
-	}
-	public BufferStrategy getBufferStrategy(){
-		return canvas.getBufferStrategy();
+	public Canvas getCanvas(){
+		return canvas;
 	}
 }
