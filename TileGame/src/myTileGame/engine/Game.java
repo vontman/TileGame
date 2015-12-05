@@ -16,6 +16,7 @@ import myTileGame.world.World;
 
 public class Game implements Runnable{
 	public final static String GAME_NAME = "MyTileGame";
+	private final double FPS = 60;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
@@ -66,8 +67,7 @@ public class Game implements Runnable{
 		double now = System.nanoTime();
 		double last = System.nanoTime();
 		double timer = 0;
-		double fps = 60;
-		double timePerFrame = 1e9/fps;
+		double timePerFrame = 1e9/FPS;
 		while( running ){
 			now = System.nanoTime();
 			timer += now - last;

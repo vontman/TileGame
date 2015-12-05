@@ -7,7 +7,7 @@ public class Assets {
 	public static final int CELL_HEIGHT = 32;
 	private static SpriteSheet textureSheet;
 	private static SpriteSheet playerSheet;
-	public static BufferedImage playerLeft,playerRight,playerUp,playerDown;
+	public static BufferedImage[] playerLeft,playerRight,playerUp,playerDown;
 	public static BufferedImage dirt,stone,grass;
 	public static void init(){
 		initTextures();
@@ -21,21 +21,30 @@ public class Assets {
 	}
 	private static void initPlayer(){
 		playerSheet = new SpriteSheet("/textures/player.png");
-		playerLeft = playerSheet.getImageAt(0, 0);
-		playerRight = playerSheet.getImageAt(1, 0);
-		playerUp = playerSheet.getImageAt(0, 1);
-		playerDown = playerSheet.getImageAt(1, 1);
+		
+		playerLeft = new BufferedImage[1];
+		playerRight = new BufferedImage[1];
+		playerUp = new BufferedImage[1];
+		playerDown = new BufferedImage[1];
+		
+		playerLeft[0] = playerSheet.getImageAt(0, 0);
+		playerRight[0] = playerSheet.getImageAt(1, 0);
+		playerUp[0] = playerSheet.getImageAt(0, 1);
+		playerDown[0] = playerSheet.getImageAt(1, 1);
 	}
 	
 	//Getters
-	public static BufferedImage getPlayerLeft() {
+	public static BufferedImage[] getPlayerLeft() {
 		return playerLeft;
 	}
-	public static BufferedImage getPlayerRight() {
+	public static BufferedImage[] getPlayerRight() {
 		return playerRight;
 	}
-	public static BufferedImage getPlayerUp() {
+	public static BufferedImage[] getPlayerUp() {
 		return playerUp;
+	}
+	public static BufferedImage[] setPlayerDown() {
+		return playerDown;
 	}
 	public static BufferedImage getDirt() {
 		return dirt;
@@ -43,7 +52,5 @@ public class Assets {
 	public static BufferedImage getStone() {
 		return stone;
 	}
-	public static BufferedImage setPlayerDown() {
-		return playerDown;
-	}
+	
 }

@@ -7,11 +7,7 @@ import myTileGame.gfx.Assets;
 public class Player extends Creature {
 
 	public Player(Handler handler, int x, int y, int speed) {
-		super(handler, x, y, speed);
-		upImg = Assets.playerUp;
-		downImg = Assets.playerDown;
-		leftImg = Assets.playerLeft;
-		rightImg = Assets.playerRight;
+		super(handler, x, y, speed,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
 	}
 
 	@Override
