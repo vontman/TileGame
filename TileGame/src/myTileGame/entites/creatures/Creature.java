@@ -15,8 +15,9 @@ public abstract class Creature extends Entity{
 	protected int state;
 	protected int counterState;
 	protected int speed;
-	public Creature(Handler handler, float x, float y,int speed,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
-		super(handler, x, y);
+	protected boolean moving;
+	public Creature(Handler handler, float x, float y,int width,int height,int speed,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
+		super(handler, x, y,width,height);
 		this.speed = speed;
 		upAnimation = new Animation(upImg);
 		downAnimation = new Animation(downImg);
@@ -34,8 +35,9 @@ public abstract class Creature extends Entity{
 			return rightAnimation;
 		return downAnimation;
 	}
-	public void render(Graphics g){
-		g.drawImage(getCurrAnimation().getCurrentImage(), (int)x, (int)y, null);
+	public void render(Graphics g,float xOffset,float yOffset){
+		g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
+		g.drawImage(getCurrAnimation().getCurrentImage(moving), (int)(x-xOffset), (int)(y-yOffset),width,height, null);
 	}
 	
 }

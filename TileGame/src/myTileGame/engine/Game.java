@@ -38,16 +38,21 @@ public class Game implements Runnable{
 		keyManager.tick();
 		world.tick();
 		player.tick();
+		camera.tick();
 	}
 	public void render(){
 		BufferStrategy bs = gui.getCanvas().getBufferStrategy();
-		Graphics g = gui.getCanvas().getGraphics();
 		if(bs == null){
 			gui.getCanvas().createBufferStrategy(3);
+			return;
 		}
+		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0, 0,width, height);
-		world.render(g);
-		player.render(g);
+		world.render(g,camera.getxOffset(),camera.getyOffset());
+		player.render(g,camera.getxOffset(),camera.getyOffset());
+
+		g.dispose();
+		bs.show();
 	}
 	public synchronized void start(){
 		thread = new Thread(this);
@@ -85,8 +90,8 @@ public class Game implements Runnable{
 		handler = new Handler(this);
 		keyManager = new KeyManager();
 		gui = new Gui(handler);
-		camera = new Camera(handler);
-		player = new Player(handler,0,0,5);
+		player = new Player(handler,0,0,3);
+		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;
 	}
@@ -102,14 +107,13 @@ public class Game implements Runnable{
 	public int getHeight() {
 		return height;
 	}
-	public void setHeight(int height) {
-		this.height = height;
-	}
 	public int getWidth() {
 		return width;
 	}
-	public void setWidth(int width) {
+	public void setSize(int width,int height) {
 		this.width = width;
+		this.height = height;
+		gui.setSize(width, height);
 	}
 	public Camera getCamera() {
 		return camera;

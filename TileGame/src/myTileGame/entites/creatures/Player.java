@@ -1,5 +1,7 @@
 package myTileGame.entites.creatures;
 
+import java.awt.Graphics;
+
 import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
@@ -7,7 +9,7 @@ import myTileGame.gfx.Assets;
 public class Player extends Creature {
 
 	public Player(Handler handler, int x, int y, int speed) {
-		super(handler, x, y, speed,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+		super(handler, x, y,50,50, speed,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
 	}
 
 	@Override
@@ -35,16 +37,21 @@ public class Player extends Creature {
 	}
 
 	public void move(int moveX, int moveY) {
+		float tX = x ;
+		float tY = y;
 		x += moveX * speed;
 		y += moveY * speed;
-		if (x < 0)
-			x = 0;
-		if (y < 0)
-			y = 0;
-		if (x >= (handler.getGame().getWorld().getWidth()-1)*Assets.CELL_WIDTH)
-			x = (handler.getGame().getWorld().getWidth()-1)*Assets.CELL_WIDTH;
-		if (y >= (handler.getGame().getWorld().getHeight()-1)*Assets.CELL_HEIGHT)
-			y = (handler.getGame().getWorld().getHeight()-1) *Assets.CELL_HEIGHT;
+		if (x <= 0)
+			x = 1;
+		if (y <= 0)
+			y = 1;
+		if (x+width >= handler.getGame().getWorld().getWidth()*Assets.CELL_WIDTH)
+			x = handler.getGame().getWorld().getWidth()*Assets.CELL_WIDTH-width;
+		if (y+height >= handler.getGame().getWorld().getHeight()*Assets.CELL_HEIGHT)
+			y = handler.getGame().getWorld().getHeight()*Assets.CELL_HEIGHT-height;
+		if(tX == x && tY == y)
+			moving = false;
+		else moving = true;
 	}
 
 }

@@ -2,8 +2,6 @@ package myTileGame.display;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
@@ -24,24 +22,27 @@ public class Gui {
 	}	
 	private void init(){
 		frame = new JFrame(Game.GAME_NAME);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(handler.getGame().getKeyManager());
-		frame.setResizable(false);
 		
 		canvas = new Canvas();
-		frame.setSize(width, height);
-		canvas.setPreferredSize(new Dimension(width,height));
-		canvas.setMinimumSize(new Dimension(width,height));
-		canvas.setMaximumSize(new Dimension(width,height));
+		frame.setResizable(false);
 		canvas.setFocusable(false);
+		setSize(width,height);
 		frame.add(canvas);
-		
-		frame.pack();
-		
+
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 	public Canvas getCanvas(){
 		return canvas;
+	}
+	public void setSize(int width,int height){
+		canvas.setPreferredSize(new Dimension(width,height));
+		canvas.setMinimumSize(new Dimension(width,height));
+		canvas.setMaximumSize(new Dimension(width,height));
+
+
+		frame.pack();
 	}
 }

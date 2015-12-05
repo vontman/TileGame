@@ -1,9 +1,11 @@
 package myTileGame.world;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
 import myTileGame.entites.creatures.Player;
+import myTileGame.gfx.Assets;
 import myTileGame.tiles.Tile;
 
 public abstract class World {
@@ -13,14 +15,17 @@ public abstract class World {
 	public World(Handler handler,Player player){
 		this.handler = handler;
 		worldInfo = WorldLoader.loadWorld("/worlds/"+this.getClass().getSimpleName()+".txt");
+		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGame().getWidth()), Math.min(getFullHeight(),handler.getGame().getHeight()));
 	}
 	public void tick(){
 		
 	}
-	public void render(Graphics g){
+	public void render(Graphics g,float xOffset , float yOffset){
 		for(int j =0 ; j < worldInfo.getHeight() ; j++){
 			for(int i =0 ; i < worldInfo.getWidth() ; i++){
-				Tile.tiles[worldInfo.getElementAt(i, j)].draw(g, i, j);
+				BufferedImage tempImage = Tile.tiles[worldInfo.getElementAt(i, j)].getImage();
+				g.drawImage(tempImage, (int)(i*Assets.CELL_WIDTH-xOffset), (int)(j*Assets.CELL_HEIGHT-yOffset),Assets.CELL_WIDTH,Assets.CELL_HEIGHT ,null);
+				
 			}
 		}
 	}
@@ -29,5 +34,11 @@ public abstract class World {
 	}
 	public int getHeight(){
 		return worldInfo.getHeight();
+	}
+	public int getFullWidth(){
+		return worldInfo.getWidth()*Assets.CELL_WIDTH;
+	}
+	public int getFullHeight(){
+		return worldInfo.getHeight()*Assets.CELL_HEIGHT;
 	}
 }

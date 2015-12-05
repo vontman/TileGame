@@ -25,6 +25,7 @@ public class WorldLoader {
 					board[i][j] = scanner.nextInt();
 				}
 			}
+			scanner.close();
 			return new WorldInfo(width,height,spawnX,spawnY,board);
 		}catch(IOException e){
 			e.printStackTrace();
