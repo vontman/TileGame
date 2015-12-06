@@ -1,5 +1,6 @@
-package myTileGame.tiles;
+package myTileGame.objects.tiles;
 
+import myTileGame.Handler;
 import myTileGame.gfx.Assets;
 
 public class Dirt extends Tile{
@@ -8,5 +9,7 @@ public class Dirt extends Tile{
 		super(id);
 		img = Assets.dirt;
 	}
+
+	
 
 }

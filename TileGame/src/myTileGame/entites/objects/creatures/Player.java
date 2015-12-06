@@ -1,4 +1,4 @@
-package myTileGame.entites.creatures;
+package myTileGame.entites.objects.creatures;
 
 import java.awt.Graphics;
 
@@ -7,9 +7,10 @@ import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
 
 public class Player extends Creature {
-
-	public Player(Handler handler, int x, int y, int speed) {
-		super(handler, x, y,50,50, speed,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+	private int superSpeed;
+	public Player(Handler handler,int id, int x, int y, int speed,int superSpeed) {
+		super(handler,id, x, y,50,50, speed,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+		this.superSpeed = superSpeed;
 	}
 
 	@Override
@@ -33,14 +34,21 @@ public class Player extends Creature {
 			moveY++;
 			state = 2;
 		}
+		if(km.shift){
+			moveX *= superSpeed;
+			moveY *= superSpeed;
+		}else{
+			moveX *= speed;
+			moveY *= speed;
+		}
 		move(moveX, moveY);
 	}
 
 	public void move(int moveX, int moveY) {
 		float tX = x ;
 		float tY = y;
-		x += moveX * speed;
-		y += moveY * speed;
+		x += moveX;
+		y += moveY;
 		if (x <= 0)
 			x = 1;
 		if (y <= 0)

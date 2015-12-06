@@ -1,21 +1,16 @@
-package myTileGame.entites;
+package myTileGame.objects.entites;
 
 import java.awt.Graphics;
 
 import myTileGame.Handler;
+import myTileGame.objects.GameObject;
 
-public abstract class Entity {
+public abstract class Entity extends GameObject{
+
 	protected Handler handler ;
-	protected float x;
-	protected float y;
-	protected int width;
-	protected int height;
-	public Entity(Handler handler,float x,float y,int width,int height) {
+	public Entity(Handler handler, int id, float x, float y, int width, int height) {
+		super(id, x, y, width, height);
 		this.handler = handler;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
 	}
 	public abstract void tick();
 	public abstract void render(Graphics g,float xOffset,float yOffset);

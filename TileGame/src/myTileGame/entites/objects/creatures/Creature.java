@@ -1,11 +1,11 @@
-package myTileGame.entites.creatures;
+package myTileGame.entites.objects.creatures;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
-import myTileGame.entites.Entity;
 import myTileGame.gfx.Animation;
+import myTileGame.objects.entites.Entity;
 
 public abstract class Creature extends Entity{
 	protected Animation upAnimation;
@@ -16,8 +16,8 @@ public abstract class Creature extends Entity{
 	protected int counterState;
 	protected int speed;
 	protected boolean moving;
-	public Creature(Handler handler, float x, float y,int width,int height,int speed,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
-		super(handler, x, y,width,height);
+	public Creature(Handler handler,int id, float x, float y,int width,int height,int speed,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
+		super(handler,id, x, y,width,height);
 		this.speed = speed;
 		upAnimation = new Animation(upImg);
 		downAnimation = new Animation(downImg);

@@ -1,7 +1,7 @@
 package myTileGame.world;
 
 import myTileGame.Handler;
-import myTileGame.entites.creatures.Player;
+import myTileGame.entites.objects.creatures.Player;
 
 public class TestWorld extends World{
 

@@ -7,10 +7,10 @@ import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.display.Camera;
 import myTileGame.display.Gui;
-import myTileGame.entites.creatures.Player;
+import myTileGame.entites.objects.creatures.Player;
 import myTileGame.gfx.Assets;
+import myTileGame.objects.tiles.Tile;
 import myTileGame.states.State;
-import myTileGame.tiles.Tile;
 import myTileGame.world.TestWorld;
 import myTileGame.world.World;
 
@@ -90,7 +90,7 @@ public class Game implements Runnable{
 		handler = new Handler(this);
 		keyManager = new KeyManager();
 		gui = new Gui(handler);
-		player = new Player(handler,0,0,3);
+		player = new Player(handler,0,0,0,3,5);
 		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;

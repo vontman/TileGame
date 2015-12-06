@@ -4,9 +4,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
-import myTileGame.entites.creatures.Player;
+import myTileGame.entites.objects.creatures.Player;
 import myTileGame.gfx.Assets;
-import myTileGame.tiles.Tile;
+import myTileGame.objects.tiles.Tile;
 
 public abstract class World {
 	protected WorldInfo worldInfo;

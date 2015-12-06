@@ -17,9 +17,9 @@ public class Assets {
 	}
 	private static void initTextures(){
 		textureSheet = new SpriteSheet("/textures/blocks3.png",16,16);
-		dirt = textureSheet.getImageAt(0, 0);
-		grass = textureSheet.getImageAt(1, 0);
-		stone = textureSheet.getImageAt(2, 0);
+		dirt = textureSheet.getImageAt(2, 0);
+		grass = textureSheet.getImageAt(1, 9);
+		stone = textureSheet.getImageAt(0,1);
 	}
 	private static void initPlayer(){
 		playerSheet = new SpriteSheet("/textures/player.png",PLAYER_WIDTH,PLAYER_HEIGHT);

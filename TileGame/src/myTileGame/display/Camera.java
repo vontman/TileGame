@@ -1,8 +1,8 @@
 package myTileGame.display;
 
 import myTileGame.Handler;
-import myTileGame.entites.Entity;
 import myTileGame.gfx.Assets;
+import myTileGame.objects.entites.Entity;
 
 public class Camera {
 	private Handler handler;
