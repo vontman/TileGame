@@ -23,11 +23,20 @@ public abstract class World {
 	public void render(Graphics g,float xOffset , float yOffset){
 		for(int j =0 ; j < worldInfo.getHeight() ; j++){
 			for(int i =0 ; i < worldInfo.getWidth() ; i++){
-				BufferedImage tempImage = Tile.tiles[worldInfo.getElementAt(i, j)].getImage();
+				BufferedImage tempImage = Tile.children[worldInfo.getElementAt(i, j)].getImage();
 				g.drawImage(tempImage, (int)(i*Assets.CELL_WIDTH-xOffset), (int)(j*Assets.CELL_HEIGHT-yOffset),Assets.CELL_WIDTH,Assets.CELL_HEIGHT ,null);
 				
 			}
 		}
+	}
+	public Tile getTileAt(int x,int y){
+		return Tile.children[worldInfo.getElementAt(x, y)];
+	}
+	public int getSpawnX(){
+		return worldInfo.getSpawnX();
+	}
+	public int getSpawnY(){
+		return worldInfo.getSpawnY();
 	}
 	public int getWidth(){
 		return worldInfo.getWidth();

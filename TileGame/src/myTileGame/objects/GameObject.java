@@ -1,7 +1,5 @@
 package myTileGame.objects;
 
-import myTileGame.Handler;
-
 public abstract class GameObject {
 
 	protected float x;
@@ -15,5 +13,8 @@ public abstract class GameObject {
 		this.id = id;
 		this.width = width;
 		this.height = height;
+	}
+	public boolean isSolid(){
+		return false;
 	}
 }

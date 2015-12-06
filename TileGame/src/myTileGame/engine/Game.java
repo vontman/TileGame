@@ -23,7 +23,7 @@ public class Game implements Runnable{
 	private Gui gui;
 	private World world;
 	private State state;
-	private Assets assets;
+	private CollisionSensor collisionSensor;
 	private int height;
 	private int width;
 	private Thread thread;
@@ -89,11 +89,15 @@ public class Game implements Runnable{
 		Tile.init();
 		handler = new Handler(this);
 		keyManager = new KeyManager();
+		collisionSensor = new CollisionSensor(handler);
 		gui = new Gui(handler);
-		player = new Player(handler,0,0,0,3,5);
+		player = new Player(handler,0,50,50,3,5);
 		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;
+	}
+	public CollisionSensor getCollisionSensor(){
+		return collisionSensor;
 	}
 	public World getWorld() {
 		return world;
