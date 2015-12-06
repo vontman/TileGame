@@ -10,7 +10,7 @@ public class Assets {
 	private static SpriteSheet textureSheet;
 	private static SpriteSheet playerSheet;
 	public static BufferedImage[] playerLeft,playerRight,playerUp,playerDown;
-	public static BufferedImage dirt,stone,grass;
+	public static BufferedImage dirt,stone,grass,tree;
 	public static void init(){
 		initTextures();
 		initPlayer();
@@ -20,6 +20,7 @@ public class Assets {
 		dirt = textureSheet.getImageAt(2, 0);
 		grass = textureSheet.getImageAt(1, 9);
 		stone = textureSheet.getImageAt(0,1);
+		tree = textureSheet.getImageAt(15, 0);
 	}
 	private static void initPlayer(){
 		playerSheet = new SpriteSheet("/textures/player.png",PLAYER_WIDTH,PLAYER_HEIGHT);

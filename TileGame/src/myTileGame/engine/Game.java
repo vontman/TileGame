@@ -9,6 +9,8 @@ import myTileGame.display.Camera;
 import myTileGame.display.Gui;
 import myTileGame.entites.objects.creatures.Player;
 import myTileGame.gfx.Assets;
+import myTileGame.objects.entites.Entity;
+import myTileGame.objects.entites.Tree;
 import myTileGame.objects.tiles.Tile;
 import myTileGame.states.State;
 import myTileGame.world.TestWorld;
@@ -49,7 +51,7 @@ public class Game implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0, 0,width, height);
 		world.render(g,camera.getxOffset(),camera.getyOffset());
-		player.render(g,camera.getxOffset(),camera.getyOffset());
+		Entity.renderEntities(g,camera.getxOffset(),camera.getyOffset());
 
 		g.dispose();
 		bs.show();
@@ -87,11 +89,13 @@ public class Game implements Runnable{
 	private void init(){
 		Assets.init();
 		Tile.init();
+		Entity.init();
 		handler = new Handler(this);
 		keyManager = new KeyManager();
 		collisionSensor = new CollisionSensor(handler);
 		gui = new Gui(handler);
 		player = new Player(handler,0,50,50,3,5);
+		new Tree(handler,1,80,80);
 		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;

@@ -21,4 +21,10 @@ public class SpriteSheet {
 	}public BufferedImage getImageAt(int x,int y,int width,int height){
 		return sheet.getSubimage(x*this.width, y*this.height, width, height);
 	}
+	public int getWidth(){
+		return this.width;
+	}
+	public int getHeight(){
+		return this.height;
+	}
 }

@@ -36,7 +36,10 @@ public class CollisionSensor {
 		for( Entity e : solidEntities ){
 			if( e.equals(entity) )
 				continue;
-			if(temp.intersects( e.getBounds())){
+			Rectangle currEntity = new Rectangle(e.getBounds());
+			currEntity.x += e.getX();
+			currEntity.y += e.getY();
+			if(temp.intersects( currEntity)){
 				return false;
 			}
 		}
