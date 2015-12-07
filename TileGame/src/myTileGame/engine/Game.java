@@ -57,6 +57,8 @@ public class Game implements Runnable{
 		bs.show();
 	}
 	public synchronized void start(){
+		if( running )
+			return ;
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -65,7 +67,6 @@ public class Game implements Runnable{
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			System.exit(1);
 		}
 	}
 	@Override
@@ -87,18 +88,23 @@ public class Game implements Runnable{
 		}
 	}
 	private void init(){
+		
 		Assets.init();
 		Tile.init();
 		Entity.init();
+		
 		handler = new Handler(this);
 		keyManager = new KeyManager();
 		collisionSensor = new CollisionSensor(handler);
 		gui = new Gui(handler);
 		player = new Player(handler,0,50,50,3,5);
-		new Tree(handler,1,80,80);
 		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;
+		
+		new Tree(handler,1,80,80);
+		new Tree(handler,1,180,180);
+		new Tree(handler,1,280,80);
 	}
 	public CollisionSensor getCollisionSensor(){
 		return collisionSensor;
