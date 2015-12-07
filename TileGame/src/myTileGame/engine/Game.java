@@ -7,30 +7,24 @@ import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.display.Camera;
 import myTileGame.display.Gui;
-import myTileGame.entites.objects.creatures.Player;
 import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
-import myTileGame.objects.entites.Tree;
 import myTileGame.objects.tiles.Tile;
+import myTileGame.states.GameState;
 import myTileGame.states.State;
-import myTileGame.world.TestWorld;
-import myTileGame.world.World;
 
 public class Game implements Runnable{
 	public final static String GAME_NAME = "MyTileGame";
-	private final double FPS = 60;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
 	private Gui gui;
-	private World world;
-	private State state;
+	private State gameState;
 	private CollisionSensor collisionSensor;
 	private int height;
 	private int width;
 	private Thread thread;
 	private boolean running;
-	private Player player;
 	public Game(int width,int height){
 		this.width = width;
 		this.height = height;
@@ -38,8 +32,10 @@ public class Game implements Runnable{
 	}
 	public void tick(){
 		keyManager.tick();
-		world.tick();
-		player.tick();
+
+		if(State.getCurrentState() != null)
+			State.getCurrentState().tick();
+		
 		camera.tick();
 	}
 	public void render(){
@@ -50,7 +46,10 @@ public class Game implements Runnable{
 		}
 		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0, 0,width, height);
-		world.render(g,camera.getxOffset(),camera.getyOffset());
+		
+		if(State.getCurrentState() != null)
+			State.getCurrentState().render(g,camera.getxOffset(),camera.getyOffset());
+		
 		Entity.renderEntities(g,camera.getxOffset(),camera.getyOffset());
 
 		g.dispose();
@@ -72,18 +71,42 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		init();
+		double FPS_RENDER = 90;
+		double FPS_TICK = 60;
 		double now = System.nanoTime();
 		double last = System.nanoTime();
-		double timer = 0;
-		double timePerFrame = 1e9/FPS;
+		double timerR = 0;
+		double timerT = 0;
+		double timePerFrameR = 1e9/FPS_RENDER;
+		double timePerFrameT = 1e9/FPS_TICK;
+//		FPS count
+//		int framePerSecond = 0;
+//		double tempTimer = 0;
+		
 		while( running ){
 			now = System.nanoTime();
-			timer += now - last;
-			if(timer >= timePerFrame){
-				timer -= timePerFrame;
+			timerR += now - last;
+			timerT += now - last;
+			if(timerT >= timePerFrameT){
+				timerT -= timePerFrameT;
 				tick();
-				render();
 			}
+			if(timerR >= timePerFrameR){
+				timerR -= timePerFrameR;
+				render();
+				//fps count
+//				framePerSecond++;
+			}
+			
+			
+//			/// fps count
+//			tempTimer += now-last;
+//			if( tempTimer >= 1e9 ){
+//				tempTimer -= 1e9;
+//				System.out.println( String.valueOf(framePerSecond));
+//				framePerSecond = 0;
+//			}
+			
 			last = now;
 		}
 	}
@@ -95,28 +118,18 @@ public class Game implements Runnable{
 		
 		handler = new Handler(this);
 		keyManager = new KeyManager();
-		collisionSensor = new CollisionSensor(handler);
 		gui = new Gui(handler);
-		player = new Player(handler,50,50,3,5);
-		camera = new Camera(handler,player);
-		world = new TestWorld(handler,player);
+		camera = new Camera(handler);
+		collisionSensor = new CollisionSensor(handler);
+		
+		gameState = new GameState(handler);
+		State.setCurrentState(gameState);
+		
 		running = true;
 		
-		new Tree(handler,80,80);
-		new Tree(handler,180,180);
-		new Tree(handler,280,80);
 	}
 	public CollisionSensor getCollisionSensor(){
 		return collisionSensor;
-	}
-	public World getWorld() {
-		return world;
-	}
-	public State getState() {
-		return state;
-	}
-	public Player getPlayer() {
-		return player;
 	}
 	public int getHeight() {
 		return height;

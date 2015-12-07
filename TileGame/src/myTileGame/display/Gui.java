@@ -16,8 +16,8 @@ public class Gui {
 	private Handler handler;
 	public Gui(Handler handler){
 		this.handler = handler;
-		this.height = handler.getGame().getHeight();
-		this.width = handler.getGame().getWidth();
+		this.height = handler.getGameHeight();
+		this.width = handler.getGameWidth();
 		init();
 	}	
 	private void init(){

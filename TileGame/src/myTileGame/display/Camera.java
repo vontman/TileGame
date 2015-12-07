@@ -8,19 +8,20 @@ public class Camera {
 	private float xOffset;
 	private float yOffset;
 	private Entity centerOfAttention;
-	public Camera(Handler handler,Entity centerOfAttention) {
+	public Camera(Handler handler) {
 		this.handler = handler;
 		xOffset = 0;
 		yOffset = 0;
-		this.centerOfAttention = centerOfAttention;
 	}
 	public void tick(){
+		if(centerOfAttention == null)
+			return;
 		float cX = centerOfAttention.getX() + centerOfAttention.getWidth()/2;
 		float cY = centerOfAttention.getY() + centerOfAttention.getHeight()/2;
-		float worldWidth = handler.getGame().getWorld().getFullWidth();
-		float worldHeight= handler.getGame().getWorld().getFullHeight();
-		float gameWidth = handler.getGame().getWidth();
-		float gameHeight = handler.getGame().getHeight();
+		float worldWidth = handler.getWorldWidth();
+		float worldHeight= handler.getWorldHeight();
+		float gameWidth = handler.getGameWidth();
+		float gameHeight = handler.getGameHeight();
 		xOffset = cX - gameWidth/2;
 		yOffset = cY - gameHeight/2;
 		if( xOffset >= worldWidth-gameWidth )
@@ -41,5 +42,8 @@ public class Camera {
 	}
 	public Entity getCenterOfAttention() {
 		return centerOfAttention;
+	}
+	public void setCenterOfAttention(Entity e) {
+		centerOfAttention = e;
 	}
 }

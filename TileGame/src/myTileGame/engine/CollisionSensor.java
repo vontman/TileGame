@@ -28,7 +28,7 @@ public class CollisionSensor {
 	private boolean checkGameBounds(Rectangle temp){
 		if( temp.x < 0 || temp.y < 0)
 			return false;
-		if( temp.getMaxX() > handler.getGame().getWorld().getFullWidth() || temp.getMaxY() > handler.getGame().getWorld().getFullHeight() )
+		if( temp.getMaxX() > handler.getWorldWidth() || temp.getMaxY() > handler.getWorldHeight() )
 			return false;
 		return true;
 	}
@@ -53,7 +53,7 @@ public class CollisionSensor {
 		for(int i = minTileX ; i <= maxTileX ; i++){
 			for(int j = minTileY ; j <= maxTileY ; j++){
 				Rectangle tileBounds = new Rectangle(i*Assets.CELL_WIDTH, j*Assets.CELL_HEIGHT, Assets.CELL_WIDTH, Assets.CELL_HEIGHT);
-				if( temp.intersects(tileBounds) &&  handler.getGame().getWorld().getTileAt(i, j).isSolid() ){
+				if( temp.intersects(tileBounds) &&  handler.getWorld().getTileAt(i, j).isSolid() ){
 					return false;
 				}
 			}
