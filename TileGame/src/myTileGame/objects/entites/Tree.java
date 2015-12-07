@@ -12,8 +12,8 @@ public class Tree extends Entity{
 	public static int BOUNDS_WIDTH = 15;
 	public static int BOUNDS_HEIGHT = 15;
 	private BufferedImage img;
-	public Tree(Handler handler, int id, float x, float y) {
-		super(handler, id, x, y, Assets.CELL_WIDTH, Assets.CELL_HEIGHT*2, BOUNDS_X, BOUNDS_Y, BOUNDS_WIDTH, BOUNDS_HEIGHT);
+	public Tree(Handler handler, float x, float y) {
+		super(handler, x, y, Assets.CELL_WIDTH, Assets.CELL_HEIGHT*2, BOUNDS_X, BOUNDS_Y, BOUNDS_WIDTH, BOUNDS_HEIGHT);
 		img = Assets.tree;
 	}
 

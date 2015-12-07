@@ -16,8 +16,8 @@ public abstract class Creature extends Entity{
 	protected int counterState;
 	protected int speed;
 	protected boolean moving;
-	public Creature(Handler handler,int id, float x, float y,int width,int height,int speed,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
-		super(handler,id, x, y,width,height, boundX, boundY, boundWidth, boundHeight);
+	public Creature(Handler handler,float x, float y,int width,int height,int speed,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
+		super(handler,x, y,width,height, boundX, boundY, boundWidth, boundHeight);
 		this.speed = speed;
 		upAnimation = new Animation(upImg);
 		downAnimation = new Animation(downImg);

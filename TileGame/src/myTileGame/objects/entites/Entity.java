@@ -10,12 +10,16 @@ import myTileGame.objects.GameObject;
 
 public abstract class Entity extends GameObject implements Comparable<Entity>{
 
+	protected float x;
+	protected float y;
 	protected Handler handler ;
 	protected Rectangle bounds;
 	public static LinkedList<Entity>currEntities;
-	public Entity(Handler handler, int id, float x, float y, int width, int height,int boundX ,int boundY , int boundWidth,int boundHeight) {
-		super(id, x, y, width, height);
+	public Entity(Handler handler, float x, float y, int width, int height,int boundX ,int boundY , int boundWidth,int boundHeight) {
+		super(width, height);
 		this.handler = handler;
+		this.x = x;
+		this.y = y;
 		bounds = new Rectangle(boundX,boundY,boundWidth,boundHeight);
 		currEntities.add(this);
 		if(this.isSolid()){

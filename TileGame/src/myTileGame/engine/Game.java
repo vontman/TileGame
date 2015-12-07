@@ -97,14 +97,14 @@ public class Game implements Runnable{
 		keyManager = new KeyManager();
 		collisionSensor = new CollisionSensor(handler);
 		gui = new Gui(handler);
-		player = new Player(handler,0,50,50,3,5);
+		player = new Player(handler,50,50,3,5);
 		camera = new Camera(handler,player);
 		world = new TestWorld(handler,player);
 		running = true;
 		
-		new Tree(handler,1,80,80);
-		new Tree(handler,1,180,180);
-		new Tree(handler,1,280,80);
+		new Tree(handler,80,80);
+		new Tree(handler,180,180);
+		new Tree(handler,280,80);
 	}
 	public CollisionSensor getCollisionSensor(){
 		return collisionSensor;

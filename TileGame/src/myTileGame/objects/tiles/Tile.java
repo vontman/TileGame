@@ -6,9 +6,11 @@ import myTileGame.gfx.Assets;
 import myTileGame.objects.GameObject;
 
 public abstract class Tile extends GameObject{
+	protected int id;
 	public Tile(int id) {
-		super(id, 0, 0, Assets.CELL_WIDTH, Assets.CELL_HEIGHT);
+		super(Assets.CELL_WIDTH, Assets.CELL_HEIGHT);
 		Tile.children[id] = this;
+		this.id = id;
 	}
 	protected BufferedImage img;
 	public static Tile[] children ;

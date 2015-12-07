@@ -30,7 +30,6 @@ public class Gui {
 		setSize(width,height);
 		frame.add(canvas);
 
-		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -44,5 +43,6 @@ public class Gui {
 
 
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 	}
 }

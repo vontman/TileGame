@@ -12,8 +12,8 @@ public class Player extends Creature {
 	public static int BOUNDS_WIDTH = 15;
 	public static int BOUNDS_HEIGHT = 22;
 	private int superSpeed;
-	public Player(Handler handler,int id, float x, float y, int speed,int superSpeed) {
-		super(handler,id, x, y,WIDTH,HEIGHT, speed,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
+		super(handler,x, y,WIDTH,HEIGHT, speed,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
 		this.superSpeed = superSpeed;
 	}
 
