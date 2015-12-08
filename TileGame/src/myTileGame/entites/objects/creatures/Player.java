@@ -11,9 +11,10 @@ public class Player extends Creature {
 	public static int BOUNDS_Y = 26;
 	public static int BOUNDS_WIDTH = 15;
 	public static int BOUNDS_HEIGHT = 22;
+	public static int START_HP = 20;
 	private int superSpeed;
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
-		super(handler,x, y,WIDTH,HEIGHT, speed,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
 		this.superSpeed = superSpeed;
 	}
 

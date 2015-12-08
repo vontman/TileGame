@@ -12,17 +12,20 @@ public abstract class Creature extends Entity{
 	protected Animation downAnimation;
 	protected Animation leftAnimation;
 	protected Animation rightAnimation;
-	protected int state;
+	protected int state = 3;
 	protected int counterState;
 	protected int speed;
+	protected int hp;
 	protected boolean moving;
-	public Creature(Handler handler,float x, float y,int width,int height,int speed,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
+	public Creature(Handler handler,float x, float y,int width,int height,int speed,int hp,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
 		super(handler,x, y,width,height, boundX, boundY, boundWidth, boundHeight);
 		this.speed = speed;
 		upAnimation = new Animation(upImg);
 		downAnimation = new Animation(downImg);
 		leftAnimation = new Animation(leftImg);
 		rightAnimation = new Animation(rightImg);
+		
+		state = 0;
 	}
 	public Animation getCurrAnimation(){
 		if( state == 1 )
