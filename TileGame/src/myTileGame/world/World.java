@@ -12,7 +12,7 @@ public abstract class World {
 	protected Handler handler;
 	public World(Handler handler){
 		this.handler = handler;
-		worldInfo = WorldLoader.loadWorld("/worlds/"+this.getClass().getSimpleName()+".txt");
+		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
 		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
 	}
 	public void tick(){
