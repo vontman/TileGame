@@ -20,7 +20,7 @@ public class CollisionSensor {
 	public boolean moveEntity(Entity entity,float moveX , float moveY){
 		float x = entity.getX();
 		float y = entity.getY();
-		Rectangle temp = new Rectangle(entity.getBounds());
+		Rectangle temp = entity.getBounds();
 		temp.x += x+moveX;
 		temp.y += y+moveY;
 		return checkGameBounds(temp)&&checkEntityCollsion(entity, temp)&&checkTileCollision(temp);
@@ -59,5 +59,5 @@ public class CollisionSensor {
 			}
 		}
 		return true;
-	}
+	}	
 }

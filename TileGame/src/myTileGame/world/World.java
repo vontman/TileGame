@@ -21,14 +21,14 @@ public abstract class World {
 	public void render(Graphics g,float xOffset , float yOffset){
 		for(int j = Math.max(0,(int)yOffset/Assets.CELL_HEIGHT) ; j < Math.min(worldInfo.getHeight(),Math.ceil((handler.getGameHeight()+yOffset)/Assets.CELL_HEIGHT)) ; j++){
 			for(int i =Math.max(0,(int)xOffset/Assets.CELL_WIDTH) ; i < Math.min(worldInfo.getWidth(),Math.ceil((handler.getGameWidth()+xOffset)/Assets.CELL_WIDTH)) ; i++){
-				BufferedImage tempImage = Tile.children[worldInfo.getElementAt(i, j)].getImage();
+				BufferedImage tempImage = Tile.getTile(worldInfo.getElementAt(i, j)).getImage();
 				g.drawImage(tempImage, (int)(i*Assets.CELL_WIDTH-xOffset), (int)(j*Assets.CELL_HEIGHT-yOffset),Assets.CELL_WIDTH,Assets.CELL_HEIGHT ,null);
 				
 			}
 		}
 	}
 	public Tile getTileAt(int x,int y){
-		return Tile.children[worldInfo.getElementAt(x, y)];
+		return Tile.getTile(worldInfo.getElementAt(x, y));
 	}
 	public int getSpawnX(){
 		return worldInfo.getSpawnX()*Assets.CELL_WIDTH;
