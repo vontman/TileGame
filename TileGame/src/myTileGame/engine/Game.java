@@ -8,7 +8,6 @@ import myTileGame.KeyManager;
 import myTileGame.display.Camera;
 import myTileGame.display.Gui;
 import myTileGame.gfx.Assets;
-import myTileGame.objects.entites.Entity;
 import myTileGame.objects.tiles.Tile;
 import myTileGame.states.GameState;
 import myTileGame.states.State;
@@ -49,8 +48,6 @@ public class Game implements Runnable{
 		
 		if(State.getCurrentState() != null)
 			State.getCurrentState().render(g,camera.getxOffset(),camera.getyOffset());
-		
-		Entity.renderEntities(g,camera.getxOffset(),camera.getyOffset());
 
 		g.dispose();
 		bs.show();
@@ -114,7 +111,6 @@ public class Game implements Runnable{
 		
 		Assets.init();
 		Tile.init();
-		Entity.init();
 		
 		handler = new Handler(this);
 		keyManager = new KeyManager();

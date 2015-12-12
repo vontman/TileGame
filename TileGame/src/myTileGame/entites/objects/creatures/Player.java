@@ -55,7 +55,7 @@ public class Player extends Creature {
 		move(moveX, moveY);
 		
 		if( km.space ){
-			for( Entity e : Entity.currEntities ){
+			for( Entity e : handler.getEntityManager().getCurrentEntities()){
 				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
 				Point p1 = new Point((int)(getBounds().getCenterX()+getX()),(int)(getBounds().getCenterY()+getY()));
 				Point p2 = new Point((int)(e.getBounds().getCenterX()+e.getX()),(int)(e.getBounds().getCenterY()+e.getY()));
@@ -77,24 +77,6 @@ public class Player extends Creature {
 			isSwimming = false;
 	}
 
-	public void move(int moveX, int moveY) {
-		float tX = x ;
-		float tY = y;
-		if(handler.getGame().getCollisionSensor().moveEntity(this, moveX, moveY)){
-			x += moveX;
-			y += moveY;
-		}
-//		if (x <= 0)
-//			x = 1;
-//		if (y <= 0)
-//			y = 1;
-//		if (x+width >= handler.getGame().getWorld().getWidth()*Assets.CELL_WIDTH)
-//			x = handler.getGame().getWorld().getWidth()*Assets.CELL_WIDTH-width;
-//		if (y+height >= handler.getGame().getWorld().getHeight()*Assets.CELL_HEIGHT)
-//			y = handler.getGame().getWorld().getHeight()*Assets.CELL_HEIGHT-height;
-		if(tX == x && tY == y)
-			moving = false;
-		else moving = true;
-	}
+	
 
 }

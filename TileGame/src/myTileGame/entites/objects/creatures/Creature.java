@@ -2,11 +2,11 @@ package myTileGame.entites.objects.creatures;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
 import myTileGame.gfx.Animation;
+import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
 
 public abstract class Creature extends Entity{
@@ -60,6 +60,64 @@ public abstract class Creature extends Entity{
 			return rightAnimation;
 		return downAnimation;
 	}
+	public void move(float moveX, float moveY) {
+//		if(handler.getGame().getCollisionSensor().moveEntity(this, moveX, moveY)){
+//			x += moveX;
+//			y += moveY;
+//		}
+		
+		
+		//entity collision
+		for( Entity e : handler.getEntityManager().getCurrentEntities()){
+			if(e.equals(this))
+				continue;
+			if(checkEntityCollision(e, moveX, 0))
+				moveX = 0;
+			if(checkEntityCollision(e, moveX, moveY))
+				moveY = 0;
+		}
+
+		int tx ;
+		int ty ;
+		//tile collision
+		if( moveX > 0 ){
+			tx = (int)(x+moveX+bounds.x+bounds.width)/Assets.CELL_WIDTH;
+			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
+					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
+				x = tx*Assets.CELL_WIDTH - bounds.x - bounds.width-1;
+			}else
+				x += moveX;
+		}else if( moveX < 0 ){
+			tx = (int)(x+moveX+bounds.x)/Assets.CELL_WIDTH;
+			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
+					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
+				x = (tx+1)*Assets.CELL_WIDTH - bounds.x+1;
+			}else
+				x += moveX;
+		}
+		if( moveY > 0 ){
+			ty = (int)(y+moveY+bounds.y+bounds.height)/Assets.CELL_HEIGHT;
+			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
+					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
+				y = ty*Assets.CELL_HEIGHT - bounds.y - bounds.height-1;
+			}else
+				y += moveY;
+		}else if( moveY < 0 ){
+			ty = (int)(y+moveY+bounds.y)/Assets.CELL_HEIGHT;
+			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
+					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
+				y = (ty+1)*Assets.CELL_HEIGHT - bounds.y+1;
+			}else 
+				y += moveY;
+		}
+		
+		
+		
+		if(moveX == 0 && moveY == 0)
+			moving = false;
+		else 
+			moving = true;
+	}
 	public void render(Graphics g,float xOffset,float yOffset){
 		//hp bar
 		g.setColor(Color.green);
@@ -82,13 +140,7 @@ public abstract class Creature extends Entity{
 			g.drawImage(img.getSubimage(10,10,img.getWidth()-20, img.getHeight()/2), (int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,height/2, null);
 		
 		//bounds
-//		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
-	}
-	public boolean intersects(Rectangle r){
-		Rectangle temp = getBounds();
-		temp.x += x;
-		temp.y += y;
-		return temp.intersects(r);
+		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
 	}
 	
 }

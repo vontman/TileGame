@@ -14,6 +14,7 @@ public class GameState extends State{
 		super(handler);
 		this.world = new TestWorld(handler);
 		handler.setWorld(world);
+		this.world.init();
 		player = new Player(handler,world.getSpawnX(),world.getSpawnY(),3,5);
 		handler.getCamera().setCenterOfAttention(player);
 	}
@@ -26,7 +27,6 @@ public class GameState extends State{
 	@Override
 	public void tick() {
 		world.tick();
-		player.tick();
 	}
 	@Override
 	public void render(Graphics g, float xOffset, float yOffset) {

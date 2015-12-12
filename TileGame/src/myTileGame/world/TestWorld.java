@@ -8,7 +8,10 @@ public class TestWorld extends World{
 
 	public TestWorld(Handler handler) {
 		super(handler);
+	}
 
+	@Override
+	public void init() {
 		new Tree(handler,80,80);
 		new Tree(handler,180,180);
 		new Tree(handler,280,80);

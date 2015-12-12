@@ -3,6 +3,7 @@ package myTileGame;
 import myTileGame.display.Camera;
 import myTileGame.engine.CollisionSensor;
 import myTileGame.engine.Game;
+import myTileGame.objects.entites.EntityManager;
 import myTileGame.world.World;
 
 public class Handler {
@@ -40,5 +41,8 @@ public class Handler {
 	}
 	public int getWorldHeight(){
 		return world.getFullHeight();
+	}
+	public EntityManager getEntityManager(){
+		return getWorld().getEntityManager();
 	}
 }
