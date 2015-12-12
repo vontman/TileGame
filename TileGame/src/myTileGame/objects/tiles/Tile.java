@@ -1,3 +1,4 @@
+
 package myTileGame.objects.tiles;
 
 import java.awt.Color;
@@ -64,5 +65,8 @@ public abstract class Tile extends GameObject{
 	}
 	public int getId(){
 		return this.id;
+	}
+	public boolean isSwimmable(){
+		return false;
 	}
 }

@@ -2,6 +2,7 @@ package myTileGame.entites.objects.creatures;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
@@ -22,6 +23,7 @@ public abstract class Creature extends Entity{
 	protected boolean moving;
 	protected boolean attacking;
 	protected boolean isAttacked;
+	protected boolean isSwimming;
 	protected long lastAttacked;
 	public Creature(Handler handler,float x, float y,int width,int height,int speed,int hp,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
 		super(handler,x, y,width,height, boundX, boundY, boundWidth, boundHeight);
@@ -66,16 +68,27 @@ public abstract class Creature extends Entity{
 		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset), width, 3);
 		g.setColor(Color.green);
 		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset), (int)(1D*width/fullHp*hp), 3);
-		
+
 		//shadow
-		g.setColor(Color.BLACK);
-		g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
-		
-		
-		g.drawImage(getCurrAnimation().getCurrentImage(moving), (int)(x-xOffset), (int)(y-yOffset),width,height, null);
+		if(!isSwimming){
+			g.setColor(Color.BLACK);
+			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
+		}
+
+		BufferedImage img = getCurrAnimation().getCurrentImage(moving);
+		if(!isSwimming)
+			g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset),width,height, null);
+		else
+			g.drawImage(img.getSubimage(10,10,img.getWidth()-20, img.getHeight()/2), (int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,height/2, null);
 		
 		//bounds
-//		g.drawRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
+//		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
+	}
+	public boolean intersects(Rectangle r){
+		Rectangle temp = getBounds();
+		temp.x += x;
+		temp.y += y;
+		return temp.intersects(r);
 	}
 	
 }

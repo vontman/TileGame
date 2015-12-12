@@ -1,5 +1,6 @@
 package myTileGame.objects.entites.statics;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -20,7 +21,12 @@ public abstract class StaticEntity extends Entity{
 
 	@Override
 	public void render(Graphics g, float xOffset, float yOffset) {
+		
+		//shadow
+		g.setColor(Color.black);
 		g.fillOval((int)(x-xOffset+5), (int)(y-yOffset+height-15), width-10,15);
+		
+		//img
 		g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset), width,height,null);
 //		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y), bounds.width,bounds.height);
 		

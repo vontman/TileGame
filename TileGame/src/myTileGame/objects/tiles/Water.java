@@ -14,5 +14,8 @@ public class Water extends Tile{
 		img = Assets.water;
 	}
 
-
+	@Override
+	public boolean isSwimmable(){
+		return true;
+	}
 }

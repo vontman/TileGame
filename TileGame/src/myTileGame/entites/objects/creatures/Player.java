@@ -6,10 +6,11 @@ import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
+import myTileGame.objects.tiles.Tile;
 
 public class Player extends Creature {
-	public static int WIDTH = 50;
-	public static int HEIGHT = 50;
+	public static int WIDTH = 48;
+	public static int HEIGHT = 48;
 	public static int BOUNDS_X = 18;
 	public static int BOUNDS_Y = 26;
 	public static int BOUNDS_WIDTH = 15;
@@ -62,6 +63,18 @@ public class Player extends Creature {
 					((Creature)e).getAttacked(10);
 			}
 		}
+		int x = (int)this.x + bounds.x;
+		int y = (int)this.y + bounds.y;
+		int width = (int)bounds.getWidth();
+		int height = (int)bounds.getHeight();
+		Tile t1 =handler.getWorld().getTileAt((int)Math.floor(x/Assets.CELL_WIDTH),(int)Math.floor(y/Assets.CELL_HEIGHT));
+		Tile t2 =handler.getWorld().getTileAt((int)Math.ceil(x/Assets.CELL_WIDTH),(int)Math.ceil(y/Assets.CELL_HEIGHT));
+		Tile t3 =handler.getWorld().getTileAt((int)Math.floor((x+width-1)/Assets.CELL_WIDTH),(int)Math.floor((y+height-1)/Assets.CELL_HEIGHT));
+		Tile t4 =handler.getWorld().getTileAt((int)Math.ceil((x+width-1)/Assets.CELL_WIDTH),(int)Math.ceil((y+height-1)/Assets.CELL_HEIGHT));
+		if( t1.isSwimmable() && t2.isSwimmable() && t3.isSwimmable() && t4.isSwimmable() ){
+			isSwimming = true;
+		}else
+			isSwimming = false;
 	}
 
 	public void move(int moveX, int moveY) {
