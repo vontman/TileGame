@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import myTileGame.Handler;
-import myTileGame.gfx.Assets;
 import myTileGame.objects.GameObject;
 
 public abstract class Entity extends GameObject implements Comparable<Entity>{

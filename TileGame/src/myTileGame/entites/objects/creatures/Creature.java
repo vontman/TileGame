@@ -140,7 +140,7 @@ public abstract class Creature extends Entity{
 			g.drawImage(img.getSubimage(10,10,img.getWidth()-20, img.getHeight()/2), (int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,height/2, null);
 		
 		//bounds
-		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
+//		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
 	}
 	
 }
