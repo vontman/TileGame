@@ -19,9 +19,5 @@ public class Monster extends Creature{
 		state = (int) (Math.random()*5 + 1);
 	}
 
-	@Override
-	public void tick() {
-		
-	}
 
 }

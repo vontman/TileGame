@@ -1,12 +1,12 @@
 package myTileGame.entites.objects.creatures;
 
-import java.awt.Point;
+import java.awt.Rectangle;
 
 import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
-import myTileGame.objects.tiles.Tile;
+import myTileGame.objects.weapons.Sword;
 
 public class Player extends Creature {
 	public static int WIDTH = 48;
@@ -16,34 +16,35 @@ public class Player extends Creature {
 	public static int BOUNDS_WIDTH = 15;
 	public static int BOUNDS_HEIGHT = 22;
 	public static int START_HP = 20;
-	public static int ATTACK_DIST = 25;
 	private int superSpeed;
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
 		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
 		this.superSpeed = superSpeed;
-		hp = 10;
+		lastAttack = 0;
+		weapon = new Sword(this);
 	}
 
 	@Override
 	public void tick() {
 		KeyManager km = handler.getKeyManager();
+		
 		int moveX = 0;
 		int moveY = 0;
 		if (km.left) {
 			moveX--;
-			state = 3;
+			state = LEFT;
 		}
-		if (km.right) {
+		else if (km.right) {
 			moveX++;
-			state = 4;
+			state = RIGHT;
 		}
 		if (km.up) {
 			moveY--;
-			state = 1;
+			state = UP;
 		}
-		if (km.down) {
+		else if (km.down) {
 			moveY++;
-			state = 2;
+			state = DOWN;
 		}
 		if(km.shift){
 			moveX *= superSpeed;
@@ -54,27 +55,51 @@ public class Player extends Creature {
 		}
 		move(moveX, moveY);
 		
-		if( km.space ){
+		//jumping
+		if(km.space && !isJumping){
+			isJumping = true;
+			jumpHeight = 10;
+		}
+		
+		//attacking
+		if(System.currentTimeMillis()-lastAttack >= weapon.getDelay())
+			isAttacking = false;
+		if( km.attack &&  !isAttacking){
+			Rectangle attckReg = null;
+			int xMove = 0  , yMove = 0;
+			if(state == UP){
+				attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y-weapon.getRange()),weapon.getRange(),weapon.getRange());
+				xMove = 0;
+				yMove = -weapon.getThrowback();
+			}
+			if(state == DOWN){
+				attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y+weapon.getRange()),weapon.getRange(),weapon.getRange());
+				xMove = 0;
+				yMove = weapon.getThrowback();
+			}
+			if(state == LEFT){
+				attckReg = new Rectangle((int)(x+bounds.x-weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
+				yMove = 0;
+				xMove = -weapon.getThrowback();
+			}
+			if(state == RIGHT){
+				attckReg = new Rectangle((int)(x+bounds.x+weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
+				yMove = 0;
+				xMove = weapon.getThrowback();
+			}
+			lastAttack = System.currentTimeMillis();
+			isAttacking = true;
 			for( Entity e : handler.getEntityManager().getCurrentEntities()){
+				if(e == null)
+					continue;
 				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
-				Point p1 = new Point((int)(getBounds().getCenterX()+getX()),(int)(getBounds().getCenterY()+getY()));
-				Point p2 = new Point((int)(e.getBounds().getCenterX()+e.getX()),(int)(e.getBounds().getCenterY()+e.getY()));
-				if( p1.distance(p2) <=  ATTACK_DIST)
-					((Creature)e).getAttacked(10);
+				if( attckReg.intersects(e.getBounds()) ){
+					((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
+				}
 			}
 		}
-		int x = (int)this.x + bounds.x;
-		int y = (int)this.y + bounds.y;
-		int width = (int)bounds.getWidth();
-		int height = (int)bounds.getHeight();
-		Tile t1 =handler.getWorld().getTileAt((int)Math.floor(x/Assets.CELL_WIDTH),(int)Math.floor(y/Assets.CELL_HEIGHT));
-		Tile t2 =handler.getWorld().getTileAt((int)Math.ceil(x/Assets.CELL_WIDTH),(int)Math.ceil(y/Assets.CELL_HEIGHT));
-		Tile t3 =handler.getWorld().getTileAt((int)Math.floor((x+width-1)/Assets.CELL_WIDTH),(int)Math.floor((y+height-1)/Assets.CELL_HEIGHT));
-		Tile t4 =handler.getWorld().getTileAt((int)Math.ceil((x+width-1)/Assets.CELL_WIDTH),(int)Math.ceil((y+height-1)/Assets.CELL_HEIGHT));
-		if( t1.isSwimmable() && t2.isSwimmable() && t3.isSwimmable() && t4.isSwimmable() ){
-			isSwimming = true;
-		}else
-			isSwimming = false;
+		
+		super.tick();
 	}
 
 	

@@ -10,13 +10,16 @@ public class Assets {
 	private static SpriteSheet textureSheet;
 	private static SpriteSheet playerSheet;
 	private static SpriteSheet monsterSheet;
+	private static SpriteSheet weaponsSheet;
 	public static BufferedImage[] playerLeft,playerRight,playerUp,playerDown;
+	public static BufferedImage sword;
 	public static BufferedImage[] monsterLeft,monsterRight,monsterUp,monsterDown;
 	public static BufferedImage dirt,stone,grass,tree,water;
 	public static void init(){
 		initTextures();
 		initPlayer();
 		initMonster();
+		initWeapons();
 	}
 	private static void initTextures(){
 		textureSheet = new SpriteSheet("/textures/blocks.png",16,16);
@@ -25,6 +28,10 @@ public class Assets {
 		stone = textureSheet.getImageAt(0,1);
 		tree = textureSheet.getImageAt(15, 0);
 		water = textureSheet.getImageAt(14, 0);
+	}
+	private static void initWeapons(){
+		weaponsSheet = new SpriteSheet("/textures/weapons.png",32,32);
+		sword = weaponsSheet.getImageAt(2, 4);
 	}
 	private static void initPlayer(){
 		playerSheet = new SpriteSheet("/textures/player.png",PLAYER_WIDTH,PLAYER_HEIGHT);

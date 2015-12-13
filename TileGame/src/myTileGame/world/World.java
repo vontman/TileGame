@@ -23,6 +23,8 @@ public abstract class World {
 	}
 	public abstract void init();
 	public void tick(){
+		Tile.tickTiles();
+		
 		LinkedList<Entity>currEntities = entityManager.getCurrentEntities();
 		for( Entity e : currEntities ){
 			e.tick();
@@ -37,7 +39,6 @@ public abstract class World {
 			for(int i =Math.max(0,(int)xOffset/Assets.CELL_WIDTH) ; i < Math.min(worldInfo.getWidth(),Math.ceil((handler.getGameWidth()+xOffset)/Assets.CELL_WIDTH)) ; i++){
 				BufferedImage tempImage = Tile.getTile(worldInfo.getElementAt(i, j)).getImage();
 				g.drawImage(tempImage, (int)(i*Assets.CELL_WIDTH-xOffset), (int)(j*Assets.CELL_HEIGHT-yOffset),Assets.CELL_WIDTH,Assets.CELL_HEIGHT ,null);
-				
 			}
 		}
 	}

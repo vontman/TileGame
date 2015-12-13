@@ -18,4 +18,8 @@ public class Water extends Tile{
 	public boolean isSwimmable(){
 		return true;
 	}
+
+	@Override
+	public void tick() {
+	}
 }

@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyManager implements KeyListener{
 	private boolean btns[];
-	public boolean up,down,left,right,shift,space;
+	public boolean up,down,left,right,shift,space,attack;
 	public KeyManager() {
 		btns = new boolean[256];
 	}
@@ -16,6 +16,7 @@ public class KeyManager implements KeyListener{
 		right = btns[KeyEvent.VK_RIGHT];
 		shift = btns[KeyEvent.VK_SHIFT];
 		space = btns[KeyEvent.VK_SPACE];
+		attack = btns[KeyEvent.VK_X];
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {

@@ -13,6 +13,11 @@ public class Grass extends Tile{
 		super(id,new Color(COLOR_RED, COLOR_GREEN, COLOR_BLUE));
 		this.img = Assets.grass;
 	}
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

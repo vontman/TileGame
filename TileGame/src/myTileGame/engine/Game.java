@@ -24,12 +24,14 @@ public class Game implements Runnable{
 	private int width;
 	private Thread thread;
 	private boolean running;
+	private long ticks;
 	public Game(int width,int height){
 		this.width = width;
 		this.height = height;
 		start();
 	}
 	public void tick(){
+		ticks++;
 		keyManager.tick();
 
 		if(State.getCurrentState() != null)
@@ -126,6 +128,9 @@ public class Game implements Runnable{
 	}
 	public CollisionSensor getCollisionSensor(){
 		return collisionSensor;
+	}
+	public long getTicks(){
+		return ticks;
 	}
 	public int getHeight() {
 		return height;

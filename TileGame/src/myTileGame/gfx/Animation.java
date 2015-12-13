@@ -6,10 +6,11 @@ public class Animation {
 	private BufferedImage imgs[];
 	private long last;
 	private long timer;
-	private final long timePerFrame = 200;
+	private long delay;
 	int index;
-	public Animation(BufferedImage imgs[]) {
+	public Animation(BufferedImage imgs[],long delay) {
 		this.imgs = imgs;
+		this.delay = delay;
 		last = System.currentTimeMillis();
 		index = 0;
 		timer = 0;
@@ -23,7 +24,7 @@ public class Animation {
 			return imgs[0];
 		}
 		timer += now - last;
-		if(timer >= timePerFrame ){
+		if(timer >= delay/imgs.length ){
 			timer = 0;
 			index ++;
 			if(index >= imgs.length)

@@ -15,8 +15,9 @@ public class WorldInfo {
 	}
 	public int getElementAt(int x,int y){
 		if(x < 0 || x >= width || y < 0 || y >= height){
-			System.out.println("Error : Element called out of board");
-			System.exit(1);
+			return -1;
+//			System.out.println("Error : Element called out of board");
+//			System.exit(1);
 		}
 		return board[x][y];
 	}
