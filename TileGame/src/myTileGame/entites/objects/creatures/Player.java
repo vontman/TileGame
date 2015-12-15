@@ -18,7 +18,7 @@ public class Player extends Creature {
 	public static int START_HP = 20;
 	private int superSpeed;
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
-		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.playerUp,Assets.playerDown,Assets.playerLeft,Assets.playerRight);
+		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.player);
 		this.superSpeed = superSpeed;
 		lastAttack = 0;
 		weapon = new Sword(this);

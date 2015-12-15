@@ -8,6 +8,7 @@ import myTileGame.KeyManager;
 import myTileGame.display.Camera;
 import myTileGame.display.Gui;
 import myTileGame.gfx.Assets;
+import myTileGame.gfx.DrawEngine;
 import myTileGame.objects.tiles.Tile;
 import myTileGame.states.GameState;
 import myTileGame.states.State;
@@ -20,6 +21,7 @@ public class Game implements Runnable{
 	private Gui gui;
 	private State gameState;
 	private CollisionSensor collisionSensor;
+	private DrawEngine drawEngine;
 	private int height;
 	private int width;
 	private Thread thread;
@@ -37,6 +39,7 @@ public class Game implements Runnable{
 		if(State.getCurrentState() != null)
 			State.getCurrentState().tick();
 		
+		drawEngine.tick();
 		camera.tick();
 	}
 	public void render(){
@@ -50,7 +53,8 @@ public class Game implements Runnable{
 		
 		if(State.getCurrentState() != null)
 			State.getCurrentState().render(g,camera.getxOffset(),camera.getyOffset());
-
+		drawEngine.render(g, camera.getxOffset(), camera.getyOffset());
+		
 		g.dispose();
 		bs.show();
 	}
@@ -70,41 +74,46 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		init();
-		double FPS_RENDER = 90;
-		double FPS_TICK = 60;
+		double FPS = 90;
+		double UPS = 60;
 		double now = System.nanoTime();
 		double last = System.nanoTime();
-		double timerR = 0;
-		double timerT = 0;
-		double timePerFrameR = 1e9/FPS_RENDER;
-		double timePerFrameT = 1e9/FPS_TICK;
+		double uTimer = 0;
+		double fTimer = 0;
+		double uTimePerFrame = 1e9/UPS;
+		double fTimePerFrame = 1e9/FPS;
 //		FPS count
-//		int framePerSecond = 0;
-//		double tempTimer = 0;
+		int ticksPerSecond = 0;
+		int framesPerSecond = 0;
+		double tempTimer = 0;
 		
 		while( running ){
 			now = System.nanoTime();
-			timerR += now - last;
-			timerT += now - last;
-			if(timerT >= timePerFrameT){
-				timerT -= timePerFrameT;
+			uTimer += now - last;
+			fTimer += now - last;
+			while(fTimer >= fTimePerFrame){
+				fTimer -= fTimePerFrame;
 				tick();
+				
+//				ticks count
+				ticksPerSecond++;
 			}
-			if(timerR >= timePerFrameR){
-				timerR -= timePerFrameR;
+			if(uTimer >= uTimePerFrame){
+				uTimer -= uTimePerFrame;
 				render();
-				//fps count
-//				framePerSecond++;
+//				fps count
+				framesPerSecond++;
 			}
 			
 			
-//			/// fps count
-//			tempTimer += now-last;
-//			if( tempTimer >= 1e9 ){
-//				tempTimer -= 1e9;
-//				System.out.println( String.valueOf(framePerSecond));
-//				framePerSecond = 0;
-//			}
+			/// fps count
+			tempTimer += now-last;
+			if( tempTimer >= 1e9 ){
+				tempTimer -= 1e9;
+				System.out.println( "UPS : " + ticksPerSecond + " , FPS : " + framesPerSecond);
+				framesPerSecond = 0;
+				ticksPerSecond = 0;
+			}
 			
 			last = now;
 		}
@@ -119,6 +128,7 @@ public class Game implements Runnable{
 		gui = new Gui(handler);
 		camera = new Camera(handler);
 		collisionSensor = new CollisionSensor(handler);
+		drawEngine = new DrawEngine(handler);
 		
 		gameState = new GameState(handler);
 		State.setCurrentState(gameState);
@@ -137,6 +147,9 @@ public class Game implements Runnable{
 	}
 	public int getWidth() {
 		return width;
+	}
+	public DrawEngine getDrawEngine(){
+		return drawEngine;
 	}
 	public void setSize(int width,int height) {
 		this.width = width;

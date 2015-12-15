@@ -7,13 +7,21 @@ public class Assets {
 	public static final int CELL_HEIGHT = 32;
 	public static final int PLAYER_WIDTH = 64;
 	public static final int PLAYER_HEIGHT = 64;
+	public static final int UP_INDEX = 0;
+	public static final int LEFT_INDEX = 1;
+	public static final int DOWN_INDEX = 2;
+	public static final int RIGHT_INDEX = 3;	
 	private static SpriteSheet textureSheet;
 	private static SpriteSheet playerSheet;
-	private static SpriteSheet monsterSheet;
+	private static SpriteSheet eyeballSheet,ghostSheet,maneaterSheet,batSheet,bigwormSheet;
 	private static SpriteSheet weaponsSheet;
-	public static BufferedImage[] playerLeft,playerRight,playerUp,playerDown;
+	public static BufferedImage[][] player;
 	public static BufferedImage sword;
-	public static BufferedImage[] monsterLeft,monsterRight,monsterUp,monsterDown;
+	public static BufferedImage[][] eyeball;
+	public static BufferedImage[][] ghost;
+	public static BufferedImage[][] maneater;
+	public static BufferedImage[][] bat;
+	public static BufferedImage[][] bigworm;
 	public static BufferedImage dirt,stone,grass,tree,water;
 	public static void init(){
 		initTextures();
@@ -34,46 +42,51 @@ public class Assets {
 		sword = weaponsSheet.getImageAt(2, 4);
 	}
 	private static void initPlayer(){
-		playerSheet = new SpriteSheet("/textures/player.png",PLAYER_WIDTH,PLAYER_HEIGHT);
-		
-		playerLeft = new BufferedImage[9];
-		playerRight = new BufferedImage[9];
-		playerUp = new BufferedImage[9];
-		playerDown = new BufferedImage[9];
-		for(int i=0;i<9;i++){
-			playerUp[i] = playerSheet.getImageAt(i, 0);
-			playerLeft[i] = playerSheet.getImageAt(i, 1);
-			playerDown[i] = playerSheet.getImageAt(i, 2);
-			playerRight[i] = playerSheet.getImageAt(i, 3);
-		}
+		playerSheet = new SpriteSheet("/textures/player/char_sword_shield.png",PLAYER_WIDTH,PLAYER_HEIGHT);
+		player = new BufferedImage[4][9];
+		initObj(playerSheet,player,8,9);
 	}
 	private static void initMonster(){
-		monsterSheet = new SpriteSheet("/textures/monster2_32.png",32,32);
+		eyeballSheet = new SpriteSheet("/textures/monsters/eyeball.png",32,38);
+		eyeball = new BufferedImage[4][3];
+		initObj(eyeballSheet,eyeball,0,3);
 		
-		monsterLeft = new BufferedImage[3];
-		monsterRight = new BufferedImage[3];
-		monsterUp = new BufferedImage[3];
-		monsterDown = new BufferedImage[3];
-		for(int i=0;i<3;i++){
-			monsterUp[i] = monsterSheet.getImageAt(i, 3);
-			monsterLeft[i] = monsterSheet.getImageAt(i, 1);
-			monsterDown[i] = monsterSheet.getImageAt(i, 0);
-			monsterRight[i] = monsterSheet.getImageAt(i, 2);
+		ghostSheet = new SpriteSheet("/textures/monsters/ghost.png",40,46);
+		ghost = new BufferedImage[4][3];
+		initObj(ghostSheet,ghost,0,3);
+		
+		maneaterSheet = new SpriteSheet("/textures/monsters/man_eater_flower.png",60,76);
+		maneater = new BufferedImage[4][3];
+		initObj(maneaterSheet,maneater,0,3);
+		
+		batSheet = new SpriteSheet("/textures/monsters/bat.png",32,32);
+		bat = new BufferedImage[4][3];
+		initObj(batSheet,bat,0,3);
+		
+		bigwormSheet = new SpriteSheet("/textures/monsters/big_worm.png",35,50);
+		bigworm= new BufferedImage[4][3];
+		initObj(bigwormSheet,bigworm,0,3);
+		
+	}
+	private static void initObj(SpriteSheet sheet ,BufferedImage[][] arr, int startIndex,int length){
+		for(int i=0;i<length;i++){
+			for(int j=0;j<4;j++)
+				arr[j][i] = sheet.getImageAt(i, startIndex+j);
 		}
 	}
 	
 	//Getters
 	public static BufferedImage[] getPlayerLeft() {
-		return playerLeft;
+		return player[LEFT_INDEX];
 	}
 	public static BufferedImage[] getPlayerRight() {
-		return playerRight;
+		return player[RIGHT_INDEX];
 	}
 	public static BufferedImage[] getPlayerUp() {
-		return playerUp;
+		return player[UP_INDEX];
 	}
 	public static BufferedImage[] setPlayerDown() {
-		return playerDown;
+		return player[DOWN_INDEX];
 	}
 	
 }

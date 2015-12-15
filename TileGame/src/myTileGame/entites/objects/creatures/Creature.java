@@ -45,23 +45,22 @@ public abstract class Creature extends Entity{
 	protected int jumpHeight;
 	protected int aboveGround;
 	
-	public Creature(Handler handler,float x, float y,int width,int height,int speed,int hp,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[] upImg , BufferedImage[] downImg , BufferedImage[] leftImg , BufferedImage[] rightImg ) {
+	public Creature(Handler handler,float x, float y,int width,int height,int speed,int hp,int boundX ,int boundY , int boundWidth,int boundHeight,BufferedImage[][] img) {
 		super(handler,x, y,width,height, boundX, boundY, boundWidth, boundHeight);
 		this.speed = speed;
 		this.hp = hp;
 		this.fullHp = hp;
-		upAnimation = new Animation(upImg,ANIMATION_DELAY);
-		downAnimation = new Animation(downImg,ANIMATION_DELAY);
-		leftAnimation = new Animation(leftImg,ANIMATION_DELAY);
-		rightAnimation = new Animation(rightImg,ANIMATION_DELAY);
+		upAnimation = new Animation(img[Assets.UP_INDEX],ANIMATION_DELAY);
+		downAnimation = new Animation(img[Assets.DOWN_INDEX],ANIMATION_DELAY);
+		leftAnimation = new Animation(img[Assets.LEFT_INDEX],ANIMATION_DELAY);
+		rightAnimation = new Animation(img[Assets.RIGHT_INDEX],ANIMATION_DELAY);
 		isAttacking = false;
 		state = 0;
 	}
 	public void getAttacked(int dmg,int xMove,int yMove,int zMove){
 		hp -= dmg;
-		if(hp < 0){
+		if(hp <= 0){
 			hp = 0;
-			isDead = true;
 		}
 		isJumping = false;
 		isFalling = false;
@@ -218,6 +217,8 @@ public abstract class Creature extends Entity{
 	}
 	
 	public void tick(){
+		if( hp == 0 )
+			isDead = true;
 		jump();
 		if(weapon != null){
 			weapon.tick();
@@ -225,6 +226,13 @@ public abstract class Creature extends Entity{
 		updatePos();
 	}
 	public void render(Graphics g,float xOffset,float yOffset){
+		if(isDead()){
+			g.setColor(Color.red);
+			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
+			
+			return;
+		}
+		
 		//hp bar
 		g.setColor(Color.green);
 		g.drawRect((int)(x-xOffset), (int)(y-5-yOffset-aboveGround), width, 4);

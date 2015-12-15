@@ -3,6 +3,7 @@ package myTileGame;
 import myTileGame.display.Camera;
 import myTileGame.engine.CollisionSensor;
 import myTileGame.engine.Game;
+import myTileGame.gfx.DrawEngine;
 import myTileGame.objects.entites.EntityManager;
 import myTileGame.world.World;
 
@@ -11,6 +12,9 @@ public class Handler {
 	private World world;
 	public Handler(Game game){
 		this.game = game;
+	}
+	public DrawEngine getDrawEngine(){
+		return game.getDrawEngine();
 	}
 	public Game getGame(){
 		return this.game;
