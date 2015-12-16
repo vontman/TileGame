@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import myTileGame.Handler;
+import myTileGame.gfx.Assets;
 import myTileGame.objects.GameObject;
 
 public abstract class Entity extends GameObject implements Comparable<Entity>{
@@ -12,6 +13,7 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 	protected float y;
 	protected Handler handler ;
 	protected Rectangle bounds;
+	protected boolean isDead;
 	public Entity(Handler handler, float x, float y, int width, int height,int boundX ,int boundY , int boundWidth,int boundHeight) {
 		super(width, height);
 		this.handler = handler;
@@ -23,8 +25,6 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 			handler.getGame().getCollisionSensor().addEntity(this);
 		}
 	}
-	public abstract void tick();
-	public abstract void render(Graphics g,float xOffset,float yOffset);
 	@Override
 	public boolean isSolid(){
 		return true;
@@ -45,6 +45,20 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 			return true;
 		return false;
 	}
+	public int getTileX(){
+		return (int)(getBounds().getCenterX()/Assets.CELL_WIDTH);
+	}
+	public int getTileY(){
+		return (int)(getBounds().getCenterY()/Assets.CELL_HEIGHT);
+	}
+	
+	//class
+
+	public abstract void tick();
+	public abstract void render(Graphics g,float xOffset,float yOffset);
+	
+	
+	//getters
 	public int getWidth() {
 		return width;
 	}
@@ -63,4 +77,9 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 	public float getY() {
 		return y;
 	}
+	public boolean isDead() {
+		return isDead;
+	}
+	
+
 }

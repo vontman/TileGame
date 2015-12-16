@@ -13,7 +13,7 @@ public class ManEater extends Monster{
 	public static int BOUNDS_Y = 4;
 	public static int BOUNDS_WIDTH = 44;
 	public static int BOUNDS_HEIGHT = 68;
-	public static int SPEED = 5;
+	public static int SPEED = 1;
 	public static int HP = 20;
 	public ManEater(Handler handler, float x, float y) {
 		super(handler, x, y, WIDTH, HEIGHT, SPEED, HP ,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT, Assets.maneater);

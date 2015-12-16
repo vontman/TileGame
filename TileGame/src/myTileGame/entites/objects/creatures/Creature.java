@@ -27,6 +27,7 @@ public abstract class Creature extends Entity{
 	protected int speed;
 	protected int hp;
 	protected int fullHp;
+	protected int team;
 	protected boolean moving;
 	
 	protected Weapon weapon;
@@ -37,7 +38,6 @@ public abstract class Creature extends Entity{
 	protected double lastAttack;
 	
 	protected boolean isSwimming;
-	protected boolean isDead;
 	
 	//jumping
 	protected boolean isJumping;
@@ -145,7 +145,7 @@ public abstract class Creature extends Entity{
 		
 		//entity collision
 		for( Entity e : handler.getEntityManager().getCurrentEntities()){
-			if(e.equals(this))
+			if(e.equals(this) || e.isDead())
 				continue;
 			if(checkEntityCollision(e, moveX, 0))
 				moveX = 0;
@@ -292,7 +292,39 @@ public abstract class Creature extends Entity{
 		//bounds
 //		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
 	}
-	
+	protected void moveRandomly(){
+		int moveX = 0;
+		int moveY = 0;
+		moving = true;
+		if(state == UP){
+			moveX = 0 ; 
+			moveY = -speed;
+		}
+		if(state == DOWN){
+			moveX = 0 ; 
+			moveY = speed;
+		}
+		if(state == LEFT){
+			moveX = -speed ; 
+			moveY = 0;
+		}
+		if(state == RIGHT){
+			moveX = speed ; 
+			moveY = 0;
+		}
+		int oldX = (int)(getX()+moveX);
+		int oldY = (int)(getY()+moveY);
+		move(moveX,moveY);
+		if( (moveX == 0 && moveY == 0) || oldX != (int)getX() || oldY != (int)getY()){
+			state = getRandomState();
+		}
+	}
+	protected int getRandomState(){
+		return (int) (Math.random()*5 + 1);
+	}
+	protected boolean isEnemy(Creature c){
+		return c.getTeam() != getTeam();
+	}
 	
 	//getters
 	public int getState(){
@@ -313,9 +345,7 @@ public abstract class Creature extends Entity{
 	public boolean isSwimming() {
 		return isSwimming;
 	}
-	public boolean isDead() {
-		return isDead;
-	}
+
 	public boolean isJumping() {
 		return isJumping;
 	}
@@ -324,5 +354,8 @@ public abstract class Creature extends Entity{
 	}
 	public int getAboveGround() {
 		return aboveGround;
+	}
+	public int getTeam(){
+		return team;
 	}
 }

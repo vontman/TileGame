@@ -13,7 +13,7 @@ public class BigWorm extends Monster{
 	public static int BOUNDS_Y = (int) (4*SCALE);
 	public static int BOUNDS_WIDTH = (int) (19*SCALE);
 	public static int BOUNDS_HEIGHT = (int) (42*SCALE);
-	public static int SPEED = 5;
+	public static int SPEED = 1;
 	public static int HP = 20;
 	public BigWorm(Handler handler, float x, float y) {
 		super(handler, x, y, WIDTH, HEIGHT, SPEED, HP ,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT, Assets.bigworm);
