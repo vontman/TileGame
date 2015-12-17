@@ -1,5 +1,7 @@
 package myTileGame.entites.objects.creatures;
 
+import java.awt.Point;
+
 import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
@@ -24,9 +26,12 @@ public class Player extends Creature {
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
 		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.player);
 		this.superSpeed = superSpeed;
-		lastAttack = 0;
-		weapon = new FlameSword(this);
-		weps = new Weapon[]{new FlameSword(this),new ShortSword(this),new LongSword(this),new ArmedSword(this)};
+		this.wepAnchorUp = new Point(width/2,10);
+		this.wepAnchorDown = new Point(width/2,height-10);
+		this.wepAnchorLeft = new Point(bounds.x,24);
+		this.wepAnchorRight = new Point(bounds.x+bounds.width,24);
+		weapon = new FlameSword();
+		weps = new Weapon[]{new FlameSword(),new ShortSword(),new LongSword(),new ArmedSword()};
 	}
 
 	@Override

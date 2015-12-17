@@ -27,7 +27,7 @@ public class Assets {
 		initTextures();
 		initPlayer();
 		initMonster();
-		initWeapons();
+		initWeapons();		
 	}
 	private static void initTextures(){
 		textureSheet = new SpriteSheet("/textures/blocks.png",16,16);

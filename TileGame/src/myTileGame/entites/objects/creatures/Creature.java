@@ -2,6 +2,7 @@ package myTileGame.entites.objects.creatures;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -15,10 +16,10 @@ import myTileGame.objects.weapons.Weapon;
 
 public abstract class Creature extends Entity{
 	public static final int ANIMATION_DELAY = 800;
-	public static final int UP = 1;
-	public static final int DOWN = 2;
-	public static final int LEFT = 3;
-	public static final int RIGHT = 4;
+	public static final int UP = 0;
+	public static final int DOWN = 1;
+	public static final int LEFT = 2;
+	public static final int RIGHT = 3;
 	
 	protected Animation upAnimation;
 	protected Animation downAnimation;
@@ -32,12 +33,30 @@ public abstract class Creature extends Entity{
 	protected int team;
 	protected boolean moving;
 	
+	protected Point wepAnchorUp;//to be set 
+	protected Point wepAnchorDown;
+	protected Point wepAnchorRight;
+	protected Point wepAnchorLeft;
 	protected Weapon weapon;
 	protected boolean isAttacking;
 	protected boolean isAttacked;
 	protected int yThrow;
+	public Point getWepAnchor() {
+		Point temp = new Point();
+		if(state == UP)
+			temp =  new Point(wepAnchorUp);
+		else if(state == DOWN)
+			temp = new Point(wepAnchorDown);
+		else if(state == LEFT)
+			temp =  new Point(wepAnchorLeft);
+		else
+			temp = new Point(wepAnchorRight);
+		temp.x += getX();
+		temp.y += getY()+getAboveGround();
+		return temp;
+	}
 	protected int xThrow;
-	protected double lastAttack;
+	protected long lastAttack;
 	
 	protected boolean isSwimming;
 	
@@ -180,13 +199,13 @@ public abstract class Creature extends Entity{
 		}
 	}
 	public Animation getCurrAnimation(){
-		if( state == 1 )
+		if( state == UP )
 			return upAnimation;
-		if( state == 2 )
+		if( state == DOWN )
 			return downAnimation;
-		if( state == 3 )
+		if( state == LEFT )
 			return leftAnimation;
-		if( state == 4 )
+		if( state == RIGHT )
 			return rightAnimation;
 		return downAnimation;
 	}
@@ -277,9 +296,6 @@ public abstract class Creature extends Entity{
 		if( hp == 0 )
 			isDead = true;
 		jump();
-		if(weapon != null){
-			weapon.tick();
-		}
 		updatePos();
 		//update attacking
 		if(weapon != null && System.currentTimeMillis()-lastAttack >= weapon.getDelay())
@@ -308,7 +324,7 @@ public abstract class Creature extends Entity{
 			return;
 		}
 		if(weapon != null && state != DOWN){
-			weapon.render(g, xOffset, yOffset);
+			weapon.render(g, xOffset, yOffset,this,lastAttack);
 		}
 		
 		//hp bar
@@ -363,7 +379,7 @@ public abstract class Creature extends Entity{
 		}
 
 		if(weapon != null && state == DOWN){
-			weapon.render(g, xOffset, yOffset);
+			weapon.render(g, xOffset, yOffset,this,lastAttack);
 		}
 
 		
@@ -406,7 +422,7 @@ public abstract class Creature extends Entity{
 		this.weapon = null;
 	}
 	protected int getRandomState(){
-		return (int) (Math.random()*5 + 1);
+		return (int) (Math.random()*5);
 	}
 	protected boolean isEnemy(Creature c){
 		return c.getTeam() != getTeam();

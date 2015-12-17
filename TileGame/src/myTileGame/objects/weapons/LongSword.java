@@ -1,6 +1,5 @@
 package myTileGame.objects.weapons;
 
-import myTileGame.entites.objects.creatures.Creature;
 import myTileGame.gfx.Assets;
 
 public class LongSword extends Weapon{
@@ -10,8 +9,8 @@ public class LongSword extends Weapon{
 	private static final int RANGE = 30;
 	private static final int DELAY = 400;
 	private static final int THROWBACK = 20;
-	public LongSword(Creature owner) {
-		super(owner,32, 32, DMG, RANGE, THROWBACK, DELAY,ANCHOR_X,ANCHOR_Y, Assets.longsword);
+	public LongSword() {
+		super(32, 32, DMG, RANGE, THROWBACK, DELAY,ANCHOR_X,ANCHOR_Y, Assets.longsword);
 	}
 
 }
