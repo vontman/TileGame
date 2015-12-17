@@ -10,9 +10,9 @@ public class ManEater extends Monster{
 	public static int WIDTH = 60;
 	public static int HEIGHT = 76;
 	public static int BOUNDS_X = 8;
-	public static int BOUNDS_Y = 4;
-	public static int BOUNDS_WIDTH = 44;
-	public static int BOUNDS_HEIGHT = 68;
+	public static int BOUNDS_Y = 48;
+	public static int BOUNDS_WIDTH = WIDTH - BOUNDS_X;
+	public static int BOUNDS_HEIGHT = HEIGHT-BOUNDS_Y;
 	public static int SPEED = 1;
 	public static int HP = 20;
 	public ManEater(Handler handler, float x, float y) {

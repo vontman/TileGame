@@ -16,7 +16,7 @@ public abstract class StaticEntity extends Entity{
 	}
 	@Override
 	public void tick() {
-		
+		super.tick();
 	}
 
 	@Override

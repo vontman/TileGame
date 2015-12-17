@@ -16,7 +16,7 @@ public class Assets {
 	private static SpriteSheet eyeballSheet,ghostSheet,maneaterSheet,batSheet,bigwormSheet;
 	private static SpriteSheet weaponsSheet;
 	public static BufferedImage[][] player;
-	public static BufferedImage sword;
+	public static BufferedImage longsword,shortsword,armedsword,flamesword;
 	public static BufferedImage[][] eyeball;
 	public static BufferedImage[][] ghost;
 	public static BufferedImage[][] maneater;
@@ -39,7 +39,10 @@ public class Assets {
 	}
 	private static void initWeapons(){
 		weaponsSheet = new SpriteSheet("/textures/weapons.png",32,32);
-		sword = weaponsSheet.getImageAt(2, 4);
+		longsword = weaponsSheet.getImageAt(2, 4);
+		armedsword = weaponsSheet.getImageAt(3, 4);
+		shortsword = weaponsSheet.getImageAt(4, 4);
+		flamesword = weaponsSheet.getImageAt(3, 5);
 	}
 	private static void initPlayer(){
 		playerSheet = new SpriteSheet("/textures/player/char_sword_shield.png",PLAYER_WIDTH,PLAYER_HEIGHT);

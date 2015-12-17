@@ -24,6 +24,11 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 		if(this.isSolid()){
 			handler.getGame().getCollisionSensor().addEntity(this);
 		}
+
+		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)
+			for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
+				handler.getWorld().getWorldChains().addChain(i,j,this);
+		
 	}
 	@Override
 	public boolean isSolid(){
@@ -54,7 +59,9 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 	
 	//class
 
-	public abstract void tick();
+	public void tick(){
+
+	}
 	public abstract void render(Graphics g,float xOffset,float yOffset);
 	
 	

@@ -16,9 +16,11 @@ public class Weapon extends GameObject{
 	protected boolean left,right,up,down;
 	protected long timer;
 	protected long last;
+	protected int anchorX;
+	protected int anchorY;
 	protected Creature owner;
 	protected BufferedImage img;
-	public Weapon(Creature owner,int width, int height,int dmg,int range,int throwback,int delay,BufferedImage img) {
+	public Weapon(Creature owner,int width, int height,int dmg,int range,int throwback,int delay,int anchorX,int anchorY,BufferedImage img) {
 		super(width, height);
 		this.dmg = dmg;
 		this.range = range;
@@ -26,6 +28,8 @@ public class Weapon extends GameObject{
 		this.throwback = throwback;
 		this.owner = owner;
 		this.img = img;
+		this.anchorX = anchorX;
+		this.anchorY = anchorY;
 	}
 	public void tick(){
 		if( !owner.isAttacking() || timer >= delay)
@@ -35,30 +39,44 @@ public class Weapon extends GameObject{
 		last = System.currentTimeMillis();
 	}
 	public void render(Graphics g, float xOffset,float yOffset){
-		if(!owner.isAttacking() || timer > delay/2D)
+		if(!owner.isAttacking())
 			return;
 		Graphics2D g2d = (Graphics2D)g;
 		AffineTransform af = g2d.getTransform();
+		int x = (int)(owner.getBounds().getMaxX()-anchorX-xOffset);
+		int y = (int)(owner.getBounds().getMinY()-owner.getAboveGround()-anchorY-yOffset);
+		float cx = (float)owner.getBounds().getCenterX()-xOffset;
+		float cy = (float)owner.getBounds().getMinY()-owner.getAboveGround()-yOffset;
 		if( owner.getState() == Creature.LEFT ){
-			g2d.rotate(Math.toRadians(180),owner.getX()-xOffset+20,owner.getY()-yOffset+5+owner.getAboveGround()+height);
 			
-			if( timer < delay/6D )
-				g2d.rotate(Math.toRadians(90),owner.getX()-xOffset+20,owner.getY()-yOffset+5+owner.getAboveGround()+height);
-			else if( timer < 2D*delay/6D )
-				g2d.rotate(Math.toRadians(90-20),owner.getX()-xOffset+20,owner.getY()-yOffset+5+owner.getAboveGround()+height);
-			else
-				g2d.rotate(Math.toRadians(90-40),owner.getX()-xOffset+20,owner.getY()-yOffset+5+owner.getAboveGround()+height);
-			g2d.drawImage(img,(int)(owner.getX()-xOffset+20),(int)(owner.getY()-yOffset+5+owner.getAboveGround()),width,height, null);
+			g2d.rotate(Math.toRadians(180),cx,cy);
+			
+			g2d.rotate(Math.toRadians((delay*1D - timer)/delay*90 ),x,y+anchorY);
+			
+			g2d.drawImage(img,x,y,width,height, null);
 		}
 		if( owner.getState() == Creature.RIGHT ){
-			if( timer < delay/6D )
-				g2d.rotate(Math.toRadians(0),owner.getX()-xOffset+30,owner.getY()-yOffset+5+owner.getAboveGround()+height);
-			else if( timer < 2D*delay/6D )
-				g2d.rotate(Math.toRadians(20),owner.getX()-xOffset+30,owner.getY()-yOffset+5+owner.getAboveGround()+height);
-			else
-				g2d.rotate(Math.toRadians(40),owner.getX()-xOffset+30,owner.getY()-yOffset+5+owner.getAboveGround()+height);
+
+			g2d.rotate(Math.toRadians(90 - (delay/1D - timer)/(delay/1D)*90 ),x,y+anchorY);
 			
-			g2d.drawImage(img,(int)(owner.getX()-xOffset+30),(int)(owner.getY()-yOffset+5+owner.getAboveGround()),width,height, null);
+			g2d.drawImage(img,x,y,width,height, null);
+		}
+		if( owner.getState() == Creature.DOWN ){
+			
+			g2d.rotate(Math.toRadians(90),cx,cy);
+			
+			g2d.rotate(Math.toRadians((delay/1D - timer)/(delay/1D)*90 ),x,y+anchorY);
+			
+			g2d.drawImage(img,x,y,width,height, null);
+		}
+
+		if( owner.getState() == Creature.UP ){
+			
+			g2d.rotate(Math.toRadians(270),cx,cy);
+			
+			g2d.rotate(Math.toRadians((delay/1D - timer)/(delay/1D)*90 ),x,y+anchorY);
+			
+			g2d.drawImage(img,x,y,width,height, null);
 		}
 		
 		g2d.setTransform(af);

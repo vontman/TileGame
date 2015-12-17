@@ -15,13 +15,16 @@ public abstract class World {
 	protected WorldInfo worldInfo;
 	protected Handler handler;
 	protected EntityManager entityManager;
+	protected WorldChains worldChains;
 	public World(Handler handler){
 		this.entityManager = new EntityManager();
 		this.handler = handler;
 		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
 		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
+		worldChains = new WorldChains(worldInfo.getWidth(),worldInfo.getHeight());
 	}
 	public abstract void init();
+	
 	public void tick(){
 		Tile.tickTiles();
 		
@@ -72,5 +75,8 @@ public abstract class World {
 	}
 	public EntityManager getEntityManager(){
 		return entityManager;
+	}
+	public WorldChains getWorldChains(){
+		return this.worldChains;
 	}
 }

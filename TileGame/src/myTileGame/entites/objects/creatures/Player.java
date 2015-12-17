@@ -1,12 +1,13 @@
 package myTileGame.entites.objects.creatures;
 
-import java.awt.Rectangle;
-
 import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
-import myTileGame.objects.entites.Entity;
-import myTileGame.objects.weapons.Sword;
+import myTileGame.objects.weapons.ArmedSword;
+import myTileGame.objects.weapons.FlameSword;
+import myTileGame.objects.weapons.LongSword;
+import myTileGame.objects.weapons.ShortSword;
+import myTileGame.objects.weapons.Weapon;
 
 public class Player extends Creature {
 	public static int WIDTH = 48;
@@ -17,11 +18,15 @@ public class Player extends Creature {
 	public static int BOUNDS_HEIGHT = 22;
 	public static int START_HP = 20;
 	private int superSpeed;
+	
+	Weapon[] weps;
+	int currWep = 0;
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
 		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.player);
 		this.superSpeed = superSpeed;
 		lastAttack = 0;
-		weapon = new Sword(this);
+		weapon = new FlameSword(this);
+		weps = new Weapon[]{new FlameSword(this),new ShortSword(this),new LongSword(this),new ArmedSword(this)};
 	}
 
 	@Override
@@ -47,6 +52,10 @@ public class Player extends Creature {
 			state = DOWN;
 		}
 		if(km.shift){
+			currWep++;
+			currWep %= weps.length;
+			equip(weps[currWep]);
+			
 			moveX *= superSpeed;
 			moveY *= superSpeed;
 		}else{
@@ -62,42 +71,8 @@ public class Player extends Creature {
 		}
 		
 		//attacking
-		if(System.currentTimeMillis()-lastAttack >= weapon.getDelay())
-			isAttacking = false;
-		if( km.attack &&  !isAttacking){
-			Rectangle attckReg = null;
-			int xMove = 0  , yMove = 0;
-			if(state == UP){
-				attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y-weapon.getRange()),weapon.getRange(),weapon.getRange());
-				xMove = 0;
-				yMove = -weapon.getThrowback();
-			}
-			if(state == DOWN){
-				attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y+weapon.getRange()),weapon.getRange(),weapon.getRange());
-				xMove = 0;
-				yMove = weapon.getThrowback();
-			}
-			if(state == LEFT){
-				attckReg = new Rectangle((int)(x+bounds.x-weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-				yMove = 0;
-				xMove = -weapon.getThrowback();
-			}
-			if(state == RIGHT){
-				attckReg = new Rectangle((int)(x+bounds.x+weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-				yMove = 0;
-				xMove = weapon.getThrowback();
-			}
-			lastAttack = System.currentTimeMillis();
-			isAttacking = true;
-			for( Entity e : handler.getEntityManager().getCurrentEntities()){
-				if(e == null)
-					continue;
-				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
-				if( attckReg.intersects(e.getBounds()) ){
-					((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
-				}
-			}
-		}
+		if(km.attack)
+			attack();
 		
 		super.tick();
 	}

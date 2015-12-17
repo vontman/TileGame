@@ -18,21 +18,20 @@ public class Monster extends Creature{
 		team = 2;
 	}
 	public void tick(){
-		if(isDead())
-			return;
-		if(moveTimer <= MOVE_TIME ){
-			moveTimer += System.currentTimeMillis()-lastUpdated;
-			moveRandomly();
-			stopTimer = 0;
-		}else{
-			stopTimer += System.currentTimeMillis()-lastUpdated;
-			if( stopTimer >= MOVE_DELAY ){
-				state = getRandomState();
-				moveTimer = 0;
+		if(!isDead()){
+			if(moveTimer <= MOVE_TIME ){
+				moveTimer += System.currentTimeMillis()-lastUpdated;
+				moveRandomly();
+				stopTimer = 0;
+			}else{
+				stopTimer += System.currentTimeMillis()-lastUpdated;
+				if( stopTimer >= MOVE_DELAY ){
+					state = getRandomState();
+					moveTimer = 0;
+				}
 			}
+			lastUpdated = System.currentTimeMillis();
 		}
-		lastUpdated = System.currentTimeMillis();
-		
 		super.tick();
 	}
 
