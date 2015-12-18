@@ -2,17 +2,14 @@ package myTileGame.entites.objects.creatures;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.Iterator;
 
 import myTileGame.Handler;
+import myTileGame.Utils;
 import myTileGame.gfx.Animation;
 import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
 import myTileGame.objects.tiles.Tile;
-import myTileGame.objects.weapons.Weapon;
 
 public abstract class Creature extends Entity{
 	public static final int ANIMATION_DELAY = 800;
@@ -33,28 +30,10 @@ public abstract class Creature extends Entity{
 	protected int team;
 	protected boolean moving;
 	
-	protected Point wepAnchorUp;//to be set 
-	protected Point wepAnchorDown;
-	protected Point wepAnchorRight;
-	protected Point wepAnchorLeft;
-	protected Weapon weapon;
 	protected boolean isAttacking;
 	protected boolean isAttacked;
 	protected int yThrow;
-	public Point getWepAnchor() {
-		Point temp = new Point();
-		if(state == UP)
-			temp =  new Point(wepAnchorUp);
-		else if(state == DOWN)
-			temp = new Point(wepAnchorDown);
-		else if(state == LEFT)
-			temp =  new Point(wepAnchorLeft);
-		else
-			temp = new Point(wepAnchorRight);
-		temp.x += getX();
-		temp.y += getY()+getAboveGround();
-		return temp;
-	}
+	
 	protected int xThrow;
 	protected long lastAttack;
 	
@@ -78,58 +57,7 @@ public abstract class Creature extends Entity{
 		isAttacking = false;
 		state = 0;
 	}
-	public void attack(){
-		if(weapon == null ||  isAttacking)
-			return;
-		Rectangle attckReg = null;
-		int xMove = 0  , yMove = 0;
-		if(state == UP){
-			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y-weapon.getRange()),weapon.getRange(),weapon.getRange());
-			xMove = 0;
-			yMove = -weapon.getThrowback();
-		}
-		if(state == DOWN){
-			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y+weapon.getRange()),weapon.getRange(),weapon.getRange());
-			xMove = 0;
-			yMove = weapon.getThrowback();
-		}
-		if(state == LEFT){
-			attckReg = new Rectangle((int)(x+bounds.x-weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-			yMove = 0;
-			xMove = -weapon.getThrowback();
-		}
-		if(state == RIGHT){
-			attckReg = new Rectangle((int)(x+bounds.x+weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-			yMove = 0;
-			xMove = weapon.getThrowback();
-		}
-		
-		//bugged , can get attacked multiple times
-//		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
-//			for(int j=getTileY()-1;j<=getBounds().getMaxY()/Assets.CELL_HEIGHT+1;j++)
-//				for( Iterator<Entity> it = handler.getWorld().getWorldChains().getChains(i, j) ; it.hasNext();){
-//					Entity e = it.next();
-//					if(e == null)
-//						continue;
-//					if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
-//					if( attckReg.intersects(e.getBounds()) ){
-//						((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
-//					}
-//				}
-			for( Iterator<Entity> it = handler.getEntityManager().getCurrentEntities().iterator() ; it.hasNext();){
-				Entity e = it.next();
-				if(e == null)
-					continue;
-				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
-				if( attckReg.intersects(e.getBounds()) ){
-					((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
-				}
-			}
-
-		lastAttack = System.currentTimeMillis();
-		isAttacking = true;
-		
-	}
+	
 	public void getAttacked(int dmg,int xMove,int yMove,int zMove){
 		hp -= dmg;
 		if(hp <= 0){
@@ -219,25 +147,25 @@ public abstract class Creature extends Entity{
 			moveY/=2;
 		}
 		//entity collision
-//		for( Entity e : handler.getEntityManager().getCurrentEntities()){
-//			if(e.equals(this) || e.isDead())
-//				continue;
-//			if(checkEntityCollision(e, moveX, 0))
-//				moveX = 0;
-//			if(checkEntityCollision(e, moveX, moveY))
-//				moveY = 0;
-//		}
-		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
-			for(int j=getTileY()-1;j<=getBounds().getMaxY()/Assets.CELL_HEIGHT+1;j++)
-				for( Iterator<Entity> it = handler.getWorld().getWorldChains().getChains(i, j) ; it.hasNext();){
-					Entity e = it.next();
-					if(e.equals(this) || e.isDead())
-						continue;
-					if(checkEntityCollision(e, moveX, 0))
-						moveX = 0;
-					if(checkEntityCollision(e, moveX, moveY))
-						moveY = 0;
-				}
+		for( Entity e : handler.getEntityManager().getCurrentEntities()){
+			if(e.equals(this) || e.isDead())
+				continue;
+			if(checkEntityCollision(e, moveX, 0))
+				moveX = 0;
+			if(checkEntityCollision(e, moveX, moveY))
+				moveY = 0;
+		}
+//		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
+//			for(int j=getTileY()-1;j<=getBounds().getMaxY()/Assets.CELL_HEIGHT+1;j++)
+//				for( Iterator<Entity> it = handler.getWorld().getWorldChains().getChains(i, j) ; it.hasNext();){
+//					Entity e = it.next();
+//					if(e.equals(this) || e.isDead())
+//						continue;
+//					if(checkEntityCollision(e, moveX, 0))
+//						moveX = 0;
+//					if(checkEntityCollision(e, moveX, moveY))
+//						moveY = 0;
+//				}
 
 		int tx ;
 		int ty ;
@@ -297,9 +225,6 @@ public abstract class Creature extends Entity{
 			isDead = true;
 		jump();
 		updatePos();
-		//update attacking
-		if(weapon != null && System.currentTimeMillis()-lastAttack >= weapon.getDelay())
-			isAttacking = false;
 
 		//check if swimming
 		int x = (int)this.x + bounds.x;
@@ -314,7 +239,6 @@ public abstract class Creature extends Entity{
 			isSwimming = true;
 		}else
 			isSwimming = false;
-		super.tick();
 	}
 	public void render(Graphics g,float xOffset,float yOffset){
 		if(isDead()){
@@ -322,9 +246,6 @@ public abstract class Creature extends Entity{
 			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
 			
 			return;
-		}
-		if(weapon != null && state != DOWN){
-			weapon.render(g, xOffset, yOffset,this,lastAttack);
 		}
 		
 		//hp bar
@@ -378,9 +299,6 @@ public abstract class Creature extends Entity{
 			
 		}
 
-		if(weapon != null && state == DOWN){
-			weapon.render(g, xOffset, yOffset,this,lastAttack);
-		}
 
 		
 		//bounds
@@ -413,16 +331,8 @@ public abstract class Creature extends Entity{
 			state = getRandomState();
 		}
 	}
-	public void equip(Weapon weapon){
-		if(isAttacking || isDead)
-			return;
-		this.weapon = weapon;
-	}
-	public void dequip(){
-		this.weapon = null;
-	}
 	protected int getRandomState(){
-		return (int) (Math.random()*5);
+		return Utils.getRandomNum(5);
 	}
 	protected boolean isEnemy(Creature c){
 		return c.getTeam() != getTeam();

@@ -59,13 +59,12 @@ public abstract class Entity extends GameObject implements Comparable<Entity>{
 	
 	//class
 
-	public void tick(){
-
-	}
+	public abstract void tick();
 	public abstract void render(Graphics g,float xOffset,float yOffset);
 	
 	
 	//getters
+	
 	public int getWidth() {
 		return width;
 	}

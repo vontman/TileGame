@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import myTileGame.entites.objects.creatures.Creature;
+import myTileGame.entites.objects.creatures.Player;
 import myTileGame.gfx.ImageLoader;
 import myTileGame.objects.GameObject;
 
@@ -35,7 +36,7 @@ public class Weapon extends GameObject{
 		this.img[Creature.LEFT] = this.img[Creature.UP];
 		this.img[Creature.DOWN] = ImageLoader.getRotatedImage(img, true, false);
 	}
-	public void render(Graphics g, float xOffset,float yOffset,Creature owner,long last){
+	public void render(Graphics g, float xOffset,float yOffset,Player owner,long last){
 		if(!owner.isAttacking())
 			return;
 		long timer = System.currentTimeMillis() - last;

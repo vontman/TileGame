@@ -1,10 +1,14 @@
 package myTileGame.entites.objects.creatures;
 
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
+import myTileGame.objects.entites.Entity;
 import myTileGame.objects.weapons.ArmedSword;
 import myTileGame.objects.weapons.FlameSword;
 import myTileGame.objects.weapons.LongSword;
@@ -20,6 +24,11 @@ public class Player extends Creature {
 	public static int BOUNDS_HEIGHT = 22;
 	public static int START_HP = 20;
 	private int superSpeed;
+	private Point wepAnchorUp;//to be set 
+	private Point wepAnchorDown;
+	private Point wepAnchorRight;
+	private Point wepAnchorLeft;
+	private Weapon weapon;
 	
 	Weapon[] weps;
 	int currWep = 0;
@@ -30,7 +39,7 @@ public class Player extends Creature {
 		this.wepAnchorDown = new Point(width/2,height-10);
 		this.wepAnchorLeft = new Point(bounds.x,24);
 		this.wepAnchorRight = new Point(bounds.x+bounds.width,24);
-		weapon = new FlameSword();
+		equip(new FlameSword());
 		weps = new Weapon[]{new FlameSword(),new ShortSword(),new LongSword(),new ArmedSword()};
 	}
 
@@ -74,14 +83,101 @@ public class Player extends Creature {
 			isJumping = true;
 			jumpHeight = 10;
 		}
+
+		//update attacking
+		if(weapon != null && System.currentTimeMillis()-lastAttack >= weapon.getDelay())
+			isAttacking = false;
 		
 		//attacking
 		if(km.attack)
 			attack();
-		
+
 		super.tick();
 	}
 
-	
+	public void attack(){
+		if(weapon == null ||  isAttacking)
+			return;
+		
+		Rectangle attckReg = null;
+		int xMove = 0  , yMove = 0;
+		if(state == UP){
+			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y-weapon.getRange()),weapon.getRange(),weapon.getRange());
+			xMove = 0;
+			yMove = -weapon.getThrowback();
+		}
+		if(state == DOWN){
+			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y+weapon.getRange()),weapon.getRange(),weapon.getRange());
+			xMove = 0;
+			yMove = weapon.getThrowback();
+		}
+		if(state == LEFT){
+			attckReg = new Rectangle((int)(x+bounds.x-weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
+			yMove = 0;
+			xMove = -weapon.getThrowback();
+		}
+		if(state == RIGHT){
+			attckReg = new Rectangle((int)(x+bounds.x+weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
+			yMove = 0;
+			xMove = weapon.getThrowback();
+		}
+		
+		//bugged , can get attacked multiple times
+//		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
+//			for(int j=getTileY()-1;j<=getBounds().getMaxY()/Assets.CELL_HEIGHT+1;j++)
+//				for( Iterator<Entity> it = handler.getWorld().getWorldChains().getChains(i, j) ; it.hasNext();){
+//					Entity e = it.next();
+//					if(e == null)
+//						continue;
+//					if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
+//					if( attckReg.intersects(e.getBounds()) ){
+//						((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
+//					}
+//				}
+			for( Iterator<Entity> it = handler.getEntityManager().getCurrentEntities().iterator() ; it.hasNext();){
+				Entity e = it.next();
+				if(e == null)
+					continue;
+				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
+				if( attckReg.intersects(e.getBounds()) ){
+					((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
+				}
+			}
 
+		lastAttack = System.currentTimeMillis();
+		isAttacking = true;
+		
+	}
+	@Override
+	public void render(Graphics g, float xOffset, float yOffset){
+		if(weapon != null && state != DOWN){
+			weapon.render(g, xOffset, yOffset,this,lastAttack);
+		}
+		super.render(g, xOffset, yOffset);
+		if(weapon != null && state == DOWN){
+			weapon.render(g, xOffset, yOffset,this,lastAttack);
+		}
+	}
+	public void equip(Weapon weapon){
+		if(isAttacking || isDead)
+			return;
+		this.weapon = weapon;
+	}
+	public void dequip(){
+		this.weapon = null;
+	}
+	public Point getWepAnchor() {
+		Point temp = new Point();
+		if(state == UP)
+			temp =  new Point(wepAnchorUp);
+		else if(state == DOWN)
+			temp = new Point(wepAnchorDown);
+		else if(state == LEFT)
+			temp =  new Point(wepAnchorLeft);
+		else
+			temp = new Point(wepAnchorRight);
+		temp.x += getX();
+		temp.y += getY()+getAboveGround();
+		return temp;
+	}
 }
