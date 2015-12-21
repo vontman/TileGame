@@ -3,6 +3,7 @@ package myTileGame.entites.objects.creatures;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.Utils;
@@ -12,7 +13,7 @@ import myTileGame.objects.entites.Entity;
 import myTileGame.objects.tiles.Tile;
 
 public abstract class Creature extends Entity{
-	public static final int ANIMATION_DELAY = 800;
+	public static final int ANIMATION_DELAY = 300;
 	public static final int UP = 0;
 	public static final int DOWN = 1;
 	public static final int LEFT = 2;
@@ -149,7 +150,8 @@ public abstract class Creature extends Entity{
 			moveY/=2;
 		}
 		//entity collision
-		for( Entity e : handler.getEntityManager().getCurrentEntities()){
+		for( Iterator<Entity>it = handler.getEntityManager().getCurrentEntities();it.hasNext();){
+			Entity e = it.next();
 			if(e.equals(this) || e.isDead())
 				continue;
 			if(checkEntityCollision(e, moveX, 0)){

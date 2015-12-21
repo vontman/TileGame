@@ -11,7 +11,7 @@ import myTileGame.objects.entites.statics.Tree;
 public class TestWorld extends World{
 
 	public TestWorld(Handler handler) {
-		super(handler,"/worlds/testworld.png");
+		super(handler);
 	}
 
 	@Override

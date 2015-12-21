@@ -10,20 +10,28 @@ import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
 
 public abstract class Projectile extends Entity{
-	private static final int ANIMATION_DELAY = 500;
+	private static final int ANIMATION_DELAY = 200;
 	private Animation animation;
-	private int speedX;
-	private int speedY;
+	private int moveX;
+	private int moveY;
 	private int dmg;
 	private int throwBack;
-
-	public Projectile(Handler handler, float x, float y, int width, int height,int dmg,int throwBack,int speedX,int speedY,BufferedImage[] imgs) {
+	private Creature caster;
+	public Projectile(Handler handler, float x, float y, int width, int height,int dmg,int throwBack,int speed,int moveX,int moveY,BufferedImage[] imgs,Creature caster) {
 		super(handler, x, y, width, height, 0, 0, width, height);
 		this.animation = new Animation(imgs,ANIMATION_DELAY);
-		this.speedX = speedX;
-		this.speedY = speedY;
 		this.dmg = dmg;
 		this.throwBack = throwBack;
+		this.caster = caster;
+		
+		if(moveX > 0)moveX = speed;
+		if(moveX < 0)moveX = -speed;
+		if(moveY > 0)moveY = speed;
+		if(moveY < 0)moveY = -speed;
+
+		this.moveX = moveX;
+		this.moveY = moveY;
+		
 	}
 	public BufferedImage getCurrentImage(){
 		return animation.getCurrentImage(true);
@@ -31,64 +39,68 @@ public abstract class Projectile extends Entity{
 	public void tick(){
 		if(isDead)
 			return;
-		if(x < 0 || y < 0 || x > handler.getWorldWidth() || y > handler.getWorldHeight()){
+		if(x+width < 0 || y+height < 0 || x > handler.getWorldWidth() || y > handler.getWorldHeight()){
 			isDead = true;
 			return;
 		}
 		
 		//entity collision
-		for(Iterator<Entity>it = handler.getEntityManager().getCurrentEntities().iterator();it.hasNext();){
+		for(Iterator<Entity>it = handler.getEntityManager().getCurrentEntities();it.hasNext();){
 			Entity e = it.next();
-			if(e.equals(this) || e.isDead())
+			if(e.equals(this) || e.isDead() || e.equals(caster) || !e.isSolid() || e.isDead())
 				continue;
-			if(checkEntityCollision(e, speedX, speedY))
+			if(checkEntityCollision(e, moveX, moveY))
 				attack(e);
 		}
 		
 		//tile collision
 		int tx = 0,ty = 0;
-		if( speedX > 0 ){
-			tx = (int)(x+speedX+bounds.x+bounds.width)/Assets.CELL_WIDTH;
+		if( moveX > 0 ){
+			tx = (int)(x+moveX+bounds.x+bounds.width)/Assets.CELL_WIDTH;
 			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
 					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
 				isDead = true;
 				return;
 			}else
-				x += speedX;
-		}else if( speedX < 0 ){
-			tx = (int)(x+speedX+bounds.x)/Assets.CELL_WIDTH;
+				x += moveX;
+		}else if( moveX < 0 ){
+			tx = (int)(x+moveX+bounds.x)/Assets.CELL_WIDTH;
 			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
 					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
 				isDead = true;
 				return;
 			}else
-				x += speedX;
+				x += moveX;
 		}
-		if( speedY > 0 ){
-			ty = (int)(y+speedY+bounds.y+bounds.height)/Assets.CELL_HEIGHT;
+		if( moveY > 0 ){
+			ty = (int)(y+moveY+bounds.y+bounds.height)/Assets.CELL_HEIGHT;
 			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
 					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
 				isDead = true;
 				return;
 			}else
-				y += speedY;
-		}else if( speedY < 0 ){
-			ty = (int)(y+speedY+bounds.y)/Assets.CELL_HEIGHT;
+				y += moveY;
+		}else if( moveY < 0 ){
+			ty = (int)(y+moveY+bounds.y)/Assets.CELL_HEIGHT;
 			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
 					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
 				isDead = true;
 				return;
 			}else 
-				y += speedY;
+				y += moveY;
 		}
 	}
 	public void attack(Entity e){
 		isDead = true;
 		if(e == null)
 			return;
-		if( !(e instanceof Creature) ){
-			((Creature)e).getAttacked(dmg, speedX/Math.abs(speedX)*throwBack, speedY/Math.abs(speedY)*throwBack, throwBack/2);
+		if( e instanceof Creature ){
+			((Creature)e).getAttacked(dmg, (moveX > 0?1:-1)*throwBack, (moveY > 0?1:-1)*throwBack, throwBack/2);
 		}
 	}
-
+	@Override
+	public boolean isSolid(){
+		return false;
+	}
+	
 }
