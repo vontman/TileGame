@@ -2,8 +2,7 @@ package myTileGame.world;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.gfx.Assets;
@@ -16,9 +15,10 @@ public abstract class World {
 	protected Handler handler;
 	protected EntityManager entityManager;
 	protected WorldChains worldChains;
+	private boolean ticking;
 	public World(Handler handler){
-		this.entityManager = new EntityManager();
 		this.handler = handler;
+		this.entityManager = new EntityManager(handler);
 		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
 		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
 		worldChains = new WorldChains(worldInfo.getWidth(),worldInfo.getHeight());
@@ -26,12 +26,16 @@ public abstract class World {
 	public abstract void init();
 	
 	public void tick(){
+		ticking = true;
+		entityManager.checkPending();
+		
 		Tile.tickTiles();
 		
-		LinkedList<Entity>currEntities = entityManager.getCurrentEntities();
-		for( Entity e : currEntities ){
+		for( Iterator<Entity>it = getEntityManager().getCurrentEntities();it.hasNext();){
+			Entity e = it.next();
 			e.tick();
 		}
+		ticking = false;
 	}
 	public void render(Graphics g,float xOffset , float yOffset){
 		renderTiles(g, xOffset, yOffset);
@@ -46,14 +50,17 @@ public abstract class World {
 		}
 	}
 	private void renderEntities(Graphics g,float xOffset,float yOffset){
-		LinkedList<Entity>currEntities = entityManager.getCurrentEntities();
-		Collections.sort(currEntities);
-		for( Entity e : currEntities ){
+		getEntityManager().sortEntities();
+		for( Iterator<Entity>it = getEntityManager().getCurrentEntities();it.hasNext();){
+			Entity e = it.next();
 			e.render(g, xOffset, yOffset);
 		}
 	}
 	public Tile getTileAt(int x,int y){
 		return Tile.getTile(worldInfo.getElementAt(x, y));
+	}
+	public boolean isTicking(){
+		return ticking;
 	}
 	public int getSpawnX(){
 		return worldInfo.getSpawnX()*Assets.CELL_WIDTH;

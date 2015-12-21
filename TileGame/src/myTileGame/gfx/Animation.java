@@ -5,33 +5,35 @@ import java.awt.image.BufferedImage;
 public class Animation {	
 	private BufferedImage imgs[];
 	private long last;
-	private long timer;
 	private long delay;
 	int index;
 	public Animation(BufferedImage imgs[],long delay) {
 		this.imgs = imgs;
 		this.delay = delay;
-		last = System.currentTimeMillis();
+		last = 0;
 		index = 0;
-		timer = 0;
 	}
 	public BufferedImage getCurrentImage(boolean flag){
-		long now = System.currentTimeMillis();
 		if(!flag){
-			index = 0;
-			last = now;
-			timer = 0;
+			reset();
 			return imgs[0];
 		}
-		timer += now - last;
-		if(timer >= delay/imgs.length ){
-			timer = 0;
-			index ++;
-			if(index >= imgs.length)
-				index = 0;
+		if(System.currentTimeMillis()-last>= delay){
+			update();
+			last = System.currentTimeMillis();
 		}
-		last = now;
 		return imgs[index];
 	}
-	
+	public void setDelay(long delay){
+		this.delay = delay;
+	}
+	private void reset(){
+		last = System.currentTimeMillis();
+		index = 0;
+	}
+	private void update(){
+		index ++;
+		if(index >= imgs.length)
+			index = 0;
+	}
 }

@@ -9,6 +9,7 @@ import myTileGame.Handler;
 import myTileGame.KeyManager;
 import myTileGame.gfx.Assets;
 import myTileGame.objects.entites.Entity;
+import myTileGame.objects.projectiles.TestProjectile;
 import myTileGame.objects.weapons.ArmedSword;
 import myTileGame.objects.weapons.FlameSword;
 import myTileGame.objects.weapons.LongSword;
@@ -24,6 +25,9 @@ public class Player extends Creature {
 	public static int BOUNDS_HEIGHT = 22;
 	public static int START_HP = 20;
 	private int superSpeed;
+	//directions
+	private boolean up,down,left,right;
+	
 	private Point wepAnchorUp;//to be set 
 	private Point wepAnchorDown;
 	private Point wepAnchorRight;
@@ -35,6 +39,12 @@ public class Player extends Creature {
 	public Player(Handler handler, float x, float y, int speed,int superSpeed) {
 		super(handler,x, y,WIDTH,HEIGHT, speed,START_HP,BOUNDS_X,BOUNDS_Y,BOUNDS_WIDTH,BOUNDS_HEIGHT,Assets.player);
 		this.superSpeed = superSpeed;
+
+		this.leftAnimation.setDelay(80);
+		this.rightAnimation.setDelay(80);
+		this.upAnimation.setDelay(80);
+		this.downAnimation.setDelay(80);
+		
 		this.wepAnchorUp = new Point(width/2,10);
 		this.wepAnchorDown = new Point(width/2,height-10);
 		this.wepAnchorLeft = new Point(bounds.x,24);
@@ -47,23 +57,28 @@ public class Player extends Creature {
 	public void tick() {
 		KeyManager km = handler.getKeyManager();
 		
+		up = down = left = right = false;
 		int moveX = 0;
 		int moveY = 0;
 		if (km.left) {
 			moveX--;
 			state = LEFT;
+			left = true;
 		}
-		else if (km.right) {
+		if (km.right) {
 			moveX++;
 			state = RIGHT;
+			right = true;
 		}
 		if (km.up) {
 			moveY--;
 			state = UP;
+			up = true;
 		}
-		else if (km.down) {
+		if (km.down) {
 			moveY++;
 			state = DOWN;
+			down = true;
 		}
 		if(km.shift){
 			currWep++;
@@ -91,7 +106,29 @@ public class Player extends Creature {
 		//attacking
 		if(km.attack)
 			attack();
-
+		if(km.getMessile()){
+			moveX = 0;
+			moveY = 0;
+			if(up)
+				moveY --;
+			if(down)
+				moveY ++;
+			if(left)
+				moveX --;
+			if(right)
+				moveX ++;
+			if(getState() == UP)
+				moveY --;
+			if(getState() == DOWN)
+				moveY ++;
+			if(getState() == LEFT)
+				moveX --;
+			if(getState() == RIGHT)
+				moveX ++;
+			new TestProjectile(handler, x+bounds.x+10, y+bounds.y, moveX, moveY,this);
+		}
+		
+		
 		super.tick();
 	}
 
@@ -134,7 +171,7 @@ public class Player extends Creature {
 //						((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
 //					}
 //				}
-			for( Iterator<Entity> it = handler.getEntityManager().getCurrentEntities().iterator() ; it.hasNext();){
+			for( Iterator<Entity> it = handler.getEntityManager().getCurrentEntities() ; it.hasNext();){
 				Entity e = it.next();
 				if(e == null)
 					continue;
