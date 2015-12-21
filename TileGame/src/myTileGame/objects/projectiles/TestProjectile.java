@@ -10,13 +10,13 @@ public class TestProjectile extends Projectile{
 
 	public TestProjectile(Handler handler, float x, float y, int moveX,
 			int moveY,Creature caster) {
-		super(handler, x, y, 32, 32, 10, 50,10, moveX, moveY, new BufferedImage[]{new BufferedImage(32,32,BufferedImage.TYPE_INT_RGB)},caster);
+		super(handler, x, y, 14, 8, 10, 50,10, moveX, moveY, new BufferedImage[]{new BufferedImage(14,8,BufferedImage.TYPE_INT_RGB)},caster);
 	}
 
 	@Override
 	public void render(Graphics g, float xOffset, float yOffset) {
 		if(!isDead)
-			g.fillRect((int)(x-xOffset), (int)(y-yOffset),32,32);
+			g.fillRect((int)(x-xOffset), (int)(y-yOffset),width,height);
 	}
 
 }

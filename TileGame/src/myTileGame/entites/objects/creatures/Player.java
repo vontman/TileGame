@@ -2,8 +2,10 @@ package myTileGame.entites.objects.creatures;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import myTileGame.Handler;
 import myTileGame.KeyManager;
@@ -33,6 +35,7 @@ public class Player extends Creature {
 	private Point wepAnchorRight;
 	private Point wepAnchorLeft;
 	private Weapon weapon;
+	private Map<Entity,Boolean>wepTargets;
 	
 	Weapon[] weps;
 	int currWep = 0;
@@ -45,10 +48,11 @@ public class Player extends Creature {
 		this.upAnimation.setDelay(80);
 		this.downAnimation.setDelay(80);
 		
-		this.wepAnchorUp = new Point(width/2,10);
+		this.wepAnchorUp = new Point(width/2,20);
 		this.wepAnchorDown = new Point(width/2,height-10);
 		this.wepAnchorLeft = new Point(bounds.x,24);
 		this.wepAnchorRight = new Point(bounds.x+bounds.width-5,28);
+		this.wepTargets = new HashMap<Entity,Boolean>();
 		equip(new FlameSword());
 		weps = new Weapon[]{new FlameSword(),new ShortSword(),new LongSword(),new ArmedSword()};
 	}
@@ -104,8 +108,14 @@ public class Player extends Creature {
 			isAttacking = false;
 		
 		//attacking
-		if(km.attack)
-			attack();
+		if(km.attack){
+			if(!isAttacking){
+				isAttacking = true;
+				lastAttack = System.currentTimeMillis();
+				wepTargets.clear();
+			}
+		}
+		attack();
 		if(km.getMessile()){
 			moveX = 0;
 			moveY = 0;
@@ -133,31 +143,11 @@ public class Player extends Creature {
 	}
 
 	public void attack(){
-		if(weapon == null ||  isAttacking)
+		if(weapon == null || !isAttacking)
 			return;
 		
-		Rectangle attckReg = null;
+		Area attckReg = weapon.getCurrHitBox(this, 0, 0, System.currentTimeMillis()-lastAttack);
 		int xMove = 0  , yMove = 0;
-		if(state == UP){
-			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y-weapon.getRange()),weapon.getRange(),weapon.getRange());
-			xMove = 0;
-			yMove = -weapon.getThrowback();
-		}
-		if(state == DOWN){
-			attckReg = new Rectangle((int)(x+bounds.x),(int)(y+bounds.y+weapon.getRange()),weapon.getRange(),weapon.getRange());
-			xMove = 0;
-			yMove = weapon.getThrowback();
-		}
-		if(state == LEFT){
-			attckReg = new Rectangle((int)(x+bounds.x-weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-			yMove = 0;
-			xMove = -weapon.getThrowback();
-		}
-		if(state == RIGHT){
-			attckReg = new Rectangle((int)(x+bounds.x+weapon.getRange()),(int)(y+bounds.y),weapon.getRange(),weapon.getRange());
-			yMove = 0;
-			xMove = weapon.getThrowback();
-		}
 		
 		//bugged , can get attacked multiple times
 //		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
@@ -176,23 +166,23 @@ public class Player extends Creature {
 				if(e == null)
 					continue;
 				if(e.equals(this) || !Creature.class.isAssignableFrom(e.getClass()))continue;
-				if( attckReg.intersects(e.getBounds()) ){
+				if(!wepTargets.containsKey(e) &&  attckReg.intersects(e.getBounds()) ){
+					wepTargets.put(e, true);
 					((Creature)e).getAttacked(weapon.getDmg(),xMove,yMove,weapon.getThrowback());
 				}
 			}
 
-		lastAttack = System.currentTimeMillis();
 		isAttacking = true;
 		
 	}
 	@Override
 	public void render(Graphics g, float xOffset, float yOffset){
 		if(weapon != null && state != DOWN){
-			weapon.render(g, xOffset, yOffset,this,lastAttack);
+			weapon.render(g, xOffset, yOffset,this,System.currentTimeMillis()-lastAttack);
 		}
 		super.render(g, xOffset, yOffset);
 		if(weapon != null && state == DOWN){
-			weapon.render(g, xOffset, yOffset,this,lastAttack);
+			weapon.render(g, xOffset, yOffset,this,System.currentTimeMillis()-lastAttack);
 		}
 	}
 	public void equip(Weapon weapon){

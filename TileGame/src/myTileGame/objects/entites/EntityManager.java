@@ -11,12 +11,14 @@ import myTileGame.Handler;
 
 public class EntityManager {
 	public static List<Entity>currEntities;
-	private Queue<Entity>pendingList;
+	private Queue<Entity>pendingAddList;
+	private Queue<Entity>pendingRemoveList;
 	private Handler handler;
 	public EntityManager(Handler handler) {
 		this.handler = handler;
 		currEntities = new ArrayList<Entity>();
-		pendingList = new LinkedList<Entity>();
+		pendingAddList = new LinkedList<Entity>();
+		pendingRemoveList = new LinkedList<Entity>();
 	}
 	public Iterator<Entity> getCurrentEntities(){
 		return currEntities.iterator();
@@ -25,23 +27,35 @@ public class EntityManager {
 		if(e == null || currEntities == null)
 			return;
 		if(handler.getWorld().isTicking())
-			pendingList.add(e);
+			pendingAddList.add(e);
 		else
 			currEntities.add(e);	
 	}
 	public void removeEntity(Entity e){
-		if(currEntities != null)
+		if(e == null || currEntities == null)
+			return;
+		if(handler.getWorld().isTicking())
+			pendingRemoveList.add(e);
+		else
 			currEntities.remove(e);
 	}
 	public void removeEntity(int index){
-		if(currEntities != null)
+		if(index < 0 || index >= currEntities.size())
+		if(handler.getWorld().isTicking())
+			pendingRemoveList.add(currEntities.get(index));
+		else if( !handler.getWorld().isTicking() )
 			currEntities.remove(index);
 	}
 	public void checkPending(){
-		while(!pendingList.isEmpty()){
-			Entity e = pendingList.poll();
+		while(!pendingAddList.isEmpty()){
+			Entity e = pendingAddList.poll();
 			if( e != null )
 				currEntities.add(e);
+		}
+		while(!pendingRemoveList.isEmpty()){
+			Entity e = pendingRemoveList.poll();
+			if( e != null )
+				currEntities.remove(e);
 		}
 	}
 	public void sortEntities() {

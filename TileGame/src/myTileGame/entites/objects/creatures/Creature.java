@@ -299,10 +299,10 @@ public abstract class Creature extends Entity{
 		if(!isSwimming)
 			g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset-aboveGround),width,height, null);
 		else{
-			if( handler.getGame().getTicks()%60 < 45 && !moving){
+			if( handler.getGame().getTicks()%60 < 45 ){
 				yOffset++;
 			}
-			else if( handler.getGame().getTicks()%60 >= 45 && !moving){
+			else if( handler.getGame().getTicks()%60 >= 45){
 				yOffset--;
 			}
 

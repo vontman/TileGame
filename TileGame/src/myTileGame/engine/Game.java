@@ -74,8 +74,8 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		init();
-		double FPS = 90;
-		double UPS = 60;
+		double FPS = 60;
+		double UPS = 90;
 		double now = System.nanoTime();
 		double last = System.nanoTime();
 		double uTimer = 0;
@@ -91,15 +91,15 @@ public class Game implements Runnable{
 			now = System.nanoTime();
 			uTimer += now - last;
 			fTimer += now - last;
-			while(fTimer >= fTimePerFrame){
-				fTimer -= fTimePerFrame;
+			while(uTimer >= uTimePerFrame){
+				uTimer -= uTimePerFrame;
 				tick();
 				
 //				ticks count
 				ticksPerSecond++;
 			}
-			if(uTimer >= uTimePerFrame){
-				uTimer -= uTimePerFrame;
+			if(fTimer >= fTimePerFrame){
+				fTimer -= fTimePerFrame;
 				render();
 //				fps count
 				framesPerSecond++;

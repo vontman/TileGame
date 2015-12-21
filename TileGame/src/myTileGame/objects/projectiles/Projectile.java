@@ -37,8 +37,10 @@ public abstract class Projectile extends Entity{
 		return animation.getCurrentImage(true);
 	}
 	public void tick(){
-		if(isDead)
+		if(isDead){
+			handler.getEntityManager().removeEntity(this);
 			return;
+		}
 		if(x+width < 0 || y+height < 0 || x > handler.getWorldWidth() || y > handler.getWorldHeight()){
 			isDead = true;
 			return;
