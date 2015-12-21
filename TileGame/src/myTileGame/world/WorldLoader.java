@@ -36,7 +36,8 @@ public class WorldLoader {
 			System.exit(1);
 		}
 		return null;
-	}public static WorldInfo loadWorldImg(String path){
+	}
+	public static WorldInfo loadWorldImg(String path){
 		try{
 			int [][]board;
 			int width;
