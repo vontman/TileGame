@@ -38,7 +38,7 @@ public class Player extends Creature {
 		this.wepAnchorUp = new Point(width/2,10);
 		this.wepAnchorDown = new Point(width/2,height-10);
 		this.wepAnchorLeft = new Point(bounds.x,24);
-		this.wepAnchorRight = new Point(bounds.x+bounds.width,24);
+		this.wepAnchorRight = new Point(bounds.x+bounds.width-5,28);
 		equip(new FlameSword());
 		weps = new Weapon[]{new FlameSword(),new ShortSword(),new LongSword(),new ArmedSword()};
 	}

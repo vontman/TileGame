@@ -16,10 +16,10 @@ public abstract class World {
 	protected Handler handler;
 	protected EntityManager entityManager;
 	protected WorldChains worldChains;
-	public World(Handler handler){
+	public World(Handler handler,String path){
 		this.entityManager = new EntityManager();
 		this.handler = handler;
-		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
+		worldInfo = WorldLoader.loadWorldImg(path);
 		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
 		worldChains = new WorldChains(worldInfo.getWidth(),worldInfo.getHeight());
 	}

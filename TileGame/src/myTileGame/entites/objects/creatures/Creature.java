@@ -29,6 +29,7 @@ public abstract class Creature extends Entity{
 	protected int fullHp;
 	protected int team;
 	protected boolean moving;
+	protected boolean colliding;
 	
 	protected boolean isAttacking;
 	protected boolean isAttacked;
@@ -138,6 +139,7 @@ public abstract class Creature extends Entity{
 		return downAnimation;
 	}
 	public void move(float moveX, float moveY) {
+		colliding = false;
 		//remove oldChains
 		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
 			handler.getWorld().getWorldChains().removeChain(i,j,this);
@@ -150,10 +152,14 @@ public abstract class Creature extends Entity{
 		for( Entity e : handler.getEntityManager().getCurrentEntities()){
 			if(e.equals(this) || e.isDead())
 				continue;
-			if(checkEntityCollision(e, moveX, 0))
+			if(checkEntityCollision(e, moveX, 0)){
 				moveX = 0;
-			if(checkEntityCollision(e, moveX, moveY))
+				colliding = true;
+			}
+			if(checkEntityCollision(e, moveX, moveY)){
+				colliding = true;
 				moveY = 0;
+			}
 		}
 //		for(int i=getTileX()-1;i<=getBounds().getMaxX()/Assets.CELL_WIDTH+1;i++)
 //			for(int j=getTileY()-1;j<=getBounds().getMaxY()/Assets.CELL_HEIGHT+1;j++)
@@ -175,6 +181,7 @@ public abstract class Creature extends Entity{
 			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
 					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
 				x = tx*Assets.CELL_WIDTH - bounds.x - bounds.width-1;
+				colliding = true;
 			}else
 				x += moveX;
 		}else if( moveX < 0 ){
@@ -182,6 +189,7 @@ public abstract class Creature extends Entity{
 			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
 					checkTileCollision(tx, (int)(y+bounds.y+bounds.height)/Assets.CELL_HEIGHT)	){
 				x = (tx+1)*Assets.CELL_WIDTH - bounds.x+1;
+				colliding = true;
 			}else
 				x += moveX;
 		}
@@ -190,6 +198,7 @@ public abstract class Creature extends Entity{
 			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
 					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
 				y = ty*Assets.CELL_HEIGHT - bounds.y - bounds.height-1;
+				colliding = true;
 			}else
 				y += moveY;
 		}else if( moveY < 0 ){
@@ -197,19 +206,28 @@ public abstract class Creature extends Entity{
 			if(checkTileCollision((int)(x+bounds.x)/Assets.CELL_WIDTH, ty) || 
 					checkTileCollision((int)(x+bounds.x+bounds.width)/Assets.CELL_WIDTH,ty)	){
 				y = (ty+1)*Assets.CELL_HEIGHT - bounds.y+1;
+				colliding = true;
 			}else 
 				y += moveY;
 		}
 		
 		//world bound
-		if( x+bounds.x < 0 )
+		if( x+bounds.x < 0 ){
 			x = -bounds.x;
-		if( y+bounds.y < 0 )
+			colliding = true;
+		}
+		if( y+bounds.y < 0 ){
 			y = -bounds.y ;
-		if(x + bounds.x + bounds.width > handler.getWorldWidth())
+			colliding = true;
+		}
+		if(x + bounds.x + bounds.width > handler.getWorldWidth()){
 			x = handler.getWorldWidth()-bounds.x-bounds.width;
-		if(y + bounds.y + bounds.height > handler.getWorldHeight())
+			colliding = true;
+		}
+		if(y + bounds.y + bounds.height > handler.getWorldHeight()){
 			y = handler.getWorldHeight()-bounds.y-bounds.height;
+			colliding = true;
+		}
 		if(moveX == 0 && moveY == 0)
 			moving = false;
 		else 
@@ -307,7 +325,6 @@ public abstract class Creature extends Entity{
 	protected void moveRandomly(){
 		int moveX = 0;
 		int moveY = 0;
-		moving = true;
 		if(state == UP){
 			moveX = 0 ; 
 			moveY = -speed;
@@ -324,12 +341,11 @@ public abstract class Creature extends Entity{
 			moveX = speed ; 
 			moveY = 0;
 		}
-		int oldX = (int)(getX()+moveX);
-		int oldY = (int)(getY()+moveY);
 		move(moveX,moveY);
-		if( (moveX == 0 && moveY == 0) || oldX != (int)getX() || oldY != (int)getY()){
+		if(!moving || colliding){
 			state = getRandomState();
 		}
+		moving = true;
 	}
 	protected int getRandomState(){
 		return Utils.getRandomNum(5);
