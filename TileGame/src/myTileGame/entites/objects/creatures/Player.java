@@ -56,6 +56,8 @@ public class Player extends Creature {
 		this.wepAnchorLeft = new Point(bounds.x, 24);
 		this.wepAnchorRight = new Point(bounds.x + bounds.width - 5, 28);
 		this.wepTargets = new HashMap<Entity, Boolean>();
+		
+		handler.addLight(this, 200, .9F);
 		equip(new FlameSword());
 		weps = new Weapon[] { new FlameSword(), new ShortSword(), new LongSword(), new ArmedSword() };
 	}

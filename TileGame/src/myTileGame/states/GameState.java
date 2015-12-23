@@ -11,7 +11,6 @@ import myTileGame.world.World;
 public class GameState extends State{
 	protected Player player;
 	protected World world;
-	protected LightMap lightMap;
 	public GameState(Handler handler) {
 		super(handler);
 		this.world = new TestWorld(handler);
@@ -20,7 +19,6 @@ public class GameState extends State{
 		player = new Player(handler,world.getSpawnX(),world.getSpawnY(),3,5);
 		handler.getCamera().setCenterOfAttention(player);
 		
-		lightMap = new LightMap(handler,player);
 	}
 	public World getWorld(){
 		return world;
@@ -31,12 +29,10 @@ public class GameState extends State{
 	@Override
 	public void tick() {
 		world.tick();
-		lightMap.tick();
 	}
 	@Override
 	public void render(Graphics2D g, float xOffset, float yOffset) {
 		world.render(g,xOffset,yOffset);
-		lightMap.render(g, xOffset, yOffset);
 	}
 
 }

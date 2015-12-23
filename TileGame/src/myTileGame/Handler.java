@@ -4,6 +4,7 @@ import myTileGame.display.Camera;
 import myTileGame.engine.CollisionSensor;
 import myTileGame.engine.Game;
 import myTileGame.gfx.DrawEngine;
+import myTileGame.objects.entites.Entity;
 import myTileGame.objects.entites.EntityManager;
 import myTileGame.world.World;
 
@@ -48,5 +49,11 @@ public class Handler {
 	}
 	public EntityManager getEntityManager(){
 		return getWorld().getEntityManager();
+	}
+	public void addLight(Entity e,float radius,float power){
+		getWorld().getLightMap().addLight(e,radius,power);
+	}
+	public void addLight(float x,float y,float radius,float power){
+		getWorld().getLightMap().addLight(x,y,radius,power);
 	}
 }

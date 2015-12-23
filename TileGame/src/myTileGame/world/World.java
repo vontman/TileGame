@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.gfx.Assets;
+import myTileGame.gfx.LightMap;
 import myTileGame.objects.entites.Entity;
 import myTileGame.objects.entites.EntityManager;
 import myTileGame.objects.tiles.Tile;
@@ -16,12 +17,13 @@ public abstract class World {
 	protected Handler handler;
 	protected EntityManager entityManager;
 	protected WorldChains worldChains;
+	protected LightMap lightMap;
 	private boolean ticking;
 	public World(Handler handler){
 		this.handler = handler;
 		this.entityManager = new EntityManager(handler);
+		this.lightMap = new LightMap(handler);
 		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
-//		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
 		worldChains = new WorldChains(worldInfo.getWidth(),worldInfo.getHeight());
 	}
 	public abstract void init();
@@ -36,11 +38,13 @@ public abstract class World {
 			Entity e = it.next();
 			e.tick();
 		}
+		lightMap.tick();
 		ticking = false;
 	}
 	public void render(Graphics2D g,float xOffset , float yOffset){
 		renderTiles(g, xOffset, yOffset);
 		renderEntities(g, xOffset, yOffset);
+		lightMap.render(g, xOffset, yOffset);
 	}
 	private void renderTiles(Graphics g,float xOffset,float yOffset){
 		for(int j = Math.max(0,(int)yOffset/Assets.CELL_HEIGHT) ; j < Math.min(worldInfo.getHeight(),Math.ceil((handler.getGameHeight()+yOffset)/Assets.CELL_HEIGHT)) ; j++){
@@ -86,5 +90,8 @@ public abstract class World {
 	}
 	public WorldChains getWorldChains(){
 		return this.worldChains;
+	}
+	public LightMap getLightMap(){
+		return lightMap;
 	}
 }

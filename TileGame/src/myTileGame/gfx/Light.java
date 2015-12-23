@@ -21,12 +21,12 @@ public class Light {
 		this.power = Math.min(1F, power);
 		
 		
-		img = new BufferedImage((int)radius*2,(int)radius*2,BufferedImage.TYPE_INT_ARGB);
+		img = new BufferedImage((int)radius*2,(int)radius*2,BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		RadialGradientPaint gp = new RadialGradientPaint(new Point(
 	    		(int)(radius),(int)(radius))
 	    		,radius,new float[]{.0F,power},
-	    		new Color[]{new Color(0,0,0,255),new Color(0,0,0,3)});
+	    		new Color[]{new Color(0,0,0,1F),new Color(0,0,0,0)});
 		g.setPaint(gp);
 		g.fillRect(0,0, (int)radius*2, (int)radius*2);
 	    		
