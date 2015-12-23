@@ -1,6 +1,6 @@
 package myTileGame.states;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import myTileGame.Handler;
 
@@ -17,7 +17,7 @@ public class MenuState extends State{
 	}
 
 	@Override
-	public void render(Graphics g, float xOffset, float yOffset) {
+	public void render(Graphics2D g, float xOffset, float yOffset) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,7 +1,7 @@
 package myTileGame.entites.objects.creatures;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 
@@ -23,7 +23,7 @@ public abstract class Creature extends Entity{
 	protected Animation downAnimation;
 	protected Animation leftAnimation;
 	protected Animation rightAnimation;
-	protected int state = 3;
+	protected int state ;
 	protected int counterState;
 	protected int speed;
 	protected int hp;
@@ -35,8 +35,8 @@ public abstract class Creature extends Entity{
 	protected boolean isAttacking;
 	protected boolean isAttacked;
 	protected int yThrow;
-	
 	protected int xThrow;
+	
 	protected long lastAttack;
 	
 	protected boolean isSwimming;
@@ -141,9 +141,11 @@ public abstract class Creature extends Entity{
 	}
 	public void move(float moveX, float moveY) {
 		colliding = false;
-		//remove oldChains
-		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
-			handler.getWorld().getWorldChains().removeChain(i,j,this);
+		
+		
+//		//remove oldChains (failed)
+//		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
+//			handler.getWorld().getWorldChains().removeChain(i,j,this);
 		
 		if(isSwimming){
 			moveX/=2;
@@ -175,9 +177,8 @@ public abstract class Creature extends Entity{
 //						moveY = 0;
 //				}
 
-		int tx ;
-		int ty ;
 		//tile collision
+		int tx ,ty;
 		if( moveX > 0 ){
 			tx = (int)(x+moveX+bounds.x+bounds.width)/Assets.CELL_WIDTH;
 			if(checkTileCollision(tx, (int)(y+bounds.y)/Assets.CELL_HEIGHT) || 
@@ -235,9 +236,9 @@ public abstract class Creature extends Entity{
 		else 
 			moving = true;
 		
-		//add new chains
-		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
-			handler.getWorld().getWorldChains().addChain(i,j,this);
+//		//add new chains (failed)
+//		for(int i=getTileX();i<=getBounds().getMaxX()/Assets.CELL_WIDTH;i++)for(int j=getTileY();j<=getBounds().getMaxY()/Assets.CELL_HEIGHT;j++)
+//			handler.getWorld().getWorldChains().addChain(i,j,this);
 	}
 	
 	public void tick(){
@@ -260,7 +261,7 @@ public abstract class Creature extends Entity{
 		}else
 			isSwimming = false;
 	}
-	public void render(Graphics g,float xOffset,float yOffset){
+	public void render(Graphics2D g,float xOffset,float yOffset){
 		if(isDead()){
 			g.setColor(Color.red);
 			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
@@ -269,43 +270,31 @@ public abstract class Creature extends Entity{
 		}
 		
 		//hp bar
-		g.setColor(Color.green);
-		g.drawRect((int)(x-xOffset), (int)(y-5-yOffset-aboveGround), width, 4);
 		g.setColor(Color.red);
-		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), width, 3);
+		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), width, 4);
 		g.setColor(Color.green);
-		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), (int)(1D*width/fullHp*hp), 3);
+		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), (int)(1D*width/fullHp*hp), 4);
+		g.setColor(Color.BLUE);
+		g.drawRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), width, 4);
 
 		//shadow
 		if(!isSwimming){
 			g.setColor(Color.BLACK);
 			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
-		}
-
-//		//attack
-//		if(isAttacking){
-//			if(state == 4)
-//				g.fillRect((int)(x+bounds.x+bounds.width/2-xOffset), (int)(y-aboveGround+bounds.y-yOffset), 30, 6);
-//			if(state == 3)
-//				g.fillRect((int)(x+bounds.x+bounds.width/2-xOffset-40), (int)(y-aboveGround+bounds.y-yOffset), 30, 6);
-//			if(state == 1)
-//				g.fillRect((int)(x+bounds.x+bounds.width/2-xOffset-4), (int)(y-aboveGround+bounds.y-yOffset-40), 6, 30);
-//			if(state == 2)
-//				g.fillRect((int)(x+bounds.x+bounds.width/2-xOffset-4), (int)(y-aboveGround+bounds.y-yOffset), 6, 30);
-//		}
-		
+		}		
 		
 		BufferedImage img = getCurrAnimation().getCurrentImage(moving);
 		if(!isSwimming)
 			g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset-aboveGround),width,height, null);
 		else{
+			//move up and down in water :3 , cool effect :3
 			if( handler.getGame().getTicks()%60 < 45 ){
 				yOffset++;
 			}
 			else if( handler.getGame().getTicks()%60 >= 45){
 				yOffset--;
 			}
-
+			//adds a water whirling effect :3s
 			g.setColor(Color.white);
 			if( handler.getGame().getTicks()%90 < 30){
 				g.drawOval((int)(x-xOffset+5), (int)(y-yOffset+10),width-10,height/2-5);

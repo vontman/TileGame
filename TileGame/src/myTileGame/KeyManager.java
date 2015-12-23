@@ -31,9 +31,10 @@ public class KeyManager implements KeyListener{
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() < 256 )
+		if(e.getKeyCode() < 256 ){
 			btnsPressed[e.getKeyCode()] = true;
 			btnsReleased[e.getKeyCode()] = false;
+		}
 	}
 
 	@Override

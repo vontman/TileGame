@@ -1,6 +1,5 @@
 package myTileGame.objects.weapons;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -61,7 +60,7 @@ public class Weapon extends GameObject{
 		area.transform(af);
 		return area;
 	}
-	public void render(Graphics g, float xOffset,float yOffset,Player owner,long timer){
+	public void render(Graphics2D g, float xOffset,float yOffset,Player owner,long timer){
 		if(!owner.isAttacking())
 			return;
 		int state = owner.getState();
@@ -69,28 +68,27 @@ public class Weapon extends GameObject{
 		BufferedImage img = this.img[state];
 		pos.x -= xOffset;
 		pos.y -= yOffset;
-		Graphics2D g2 = (Graphics2D)g;
-		AffineTransform af = g2.getTransform();
+		AffineTransform af = g.getTransform();
 		if(state == Creature.UP){
-			g2.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
-			g2.drawImage(img, pos.x-width+anchorX,pos.y-anchorY,width,height, null);
+			g.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
+			g.drawImage(img, pos.x-width+anchorX,pos.y-anchorY,width,height, null);
 		}
 		else if(state == Creature.DOWN){
-			g2.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
-			g2.drawImage(img, pos.x-anchorX,pos.y+height-anchorY,width,height, null);
+			g.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
+			g.drawImage(img, pos.x-anchorX,pos.y+height-anchorY,width,height, null);
 		}
 		else if(state == Creature.LEFT){
-			g2.rotate(Math.toRadians(- 90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
-			g2.drawImage(img, pos.x-width+anchorX,pos.y-anchorY,width,height, null);
+			g.rotate(Math.toRadians(- 90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
+			g.drawImage(img, pos.x-width+anchorX,pos.y-anchorY,width,height, null);
 		}
 		else{
-			g2.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
-			g2.drawImage(img, pos.x-anchorX,pos.y-anchorY,width,height, null);
+			g.rotate(Math.toRadians(90 * (1D * (delay-timer)/delay)),pos.x+anchorX,pos.y+height-anchorY);
+			g.drawImage(img, pos.x-anchorX,pos.y-anchorY,width,height, null);
 		}
 
-		g2.setTransform(af);
+		g.setTransform(af);
 		
-		g2.fill(getCurrHitBox(owner,xOffset,yOffset,timer));
+//		g.fill(getCurrHitBox(owner,xOffset,yOffset,timer));
 	}
 	public int getRange() {
 		return range;

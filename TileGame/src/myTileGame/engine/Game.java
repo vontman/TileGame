@@ -1,6 +1,7 @@
 package myTileGame.engine;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 
 import myTileGame.Handler;
@@ -15,6 +16,8 @@ import myTileGame.states.State;
 
 public class Game implements Runnable{
 	public final static String GAME_NAME = "MyTileGame";
+	private final double FPS = 60;
+	private final double UPS = 90;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
@@ -48,7 +51,8 @@ public class Game implements Runnable{
 			gui.getCanvas().createBufferStrategy(3);
 			return;
 		}
-		Graphics g = bs.getDrawGraphics();
+		Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.clearRect(0, 0,width, height);
 		
 		if(State.getCurrentState() != null)
@@ -74,8 +78,6 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		init();
-		double FPS = 60;
-		double UPS = 90;
 		double now = System.nanoTime();
 		double last = System.nanoTime();
 		double uTimer = 0;
@@ -101,6 +103,7 @@ public class Game implements Runnable{
 			if(fTimer >= fTimePerFrame){
 				fTimer -= fTimePerFrame;
 				render();
+				
 //				fps count
 				framesPerSecond++;
 			}
@@ -151,11 +154,11 @@ public class Game implements Runnable{
 	public DrawEngine getDrawEngine(){
 		return drawEngine;
 	}
-	public void setSize(int width,int height) {
-		this.width = width;
-		this.height = height;
-		gui.setSize(width, height);
-	}
+//	public void setSize(int width,int height) {
+//		this.width = width;
+//		this.height = height;
+//		gui.setSize(width, height);
+//	}
 	public Camera getCamera() {
 		return camera;
 	}

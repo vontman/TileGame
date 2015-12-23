@@ -1,6 +1,6 @@
 package myTileGame.states;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import myTileGame.Handler;
 
@@ -17,5 +17,5 @@ public abstract class State {
 		this.handler = handler;
 	}
 	public abstract void tick();
-	public abstract void render(Graphics g, float xOffset, float yOffset);
+	public abstract void render(Graphics2D g, float xOffset, float yOffset);
 }

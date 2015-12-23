@@ -12,8 +12,8 @@ import myTileGame.objects.entites.Entity;
 public abstract class Projectile extends Entity{
 	private static final int ANIMATION_DELAY = 200;
 	private Animation animation;
-	private int moveX;
-	private int moveY;
+	protected int moveX;
+	protected int moveY;
 	private int dmg;
 	private int throwBack;
 	private Creature caster;

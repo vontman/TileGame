@@ -27,16 +27,17 @@ public class Gui {
 		canvas = new Canvas();
 		frame.setResizable(false);
 		canvas.setFocusable(false);
-		setSize(width,height);
 		frame.add(canvas);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		
+		setSize(width,height);
 	}
 	public Canvas getCanvas(){
 		return canvas;
 	}
-	public void setSize(int width,int height){
+	private void setSize(int width,int height){
 		canvas.setPreferredSize(new Dimension(width,height));
 		canvas.setMinimumSize(new Dimension(width,height));
 		canvas.setMaximumSize(new Dimension(width,height));

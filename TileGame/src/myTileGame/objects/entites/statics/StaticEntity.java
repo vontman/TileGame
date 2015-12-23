@@ -1,7 +1,7 @@
 package myTileGame.objects.entites.statics;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import myTileGame.Handler;
@@ -20,7 +20,7 @@ public abstract class StaticEntity extends Entity{
 	}
 
 	@Override
-	public void render(Graphics g, float xOffset, float yOffset) {
+	public void render(Graphics2D g, float xOffset, float yOffset) {
 		
 		//shadow
 		g.setColor(Color.black);

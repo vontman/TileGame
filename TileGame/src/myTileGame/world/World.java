@@ -1,6 +1,7 @@
 package myTileGame.world;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 
@@ -20,7 +21,7 @@ public abstract class World {
 		this.handler = handler;
 		this.entityManager = new EntityManager(handler);
 		worldInfo = WorldLoader.loadWorldImg("/worlds/"+this.getClass().getSimpleName()+".png");
-		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
+//		handler.getGame().setSize(Math.min(getFullWidth(),handler.getGameWidth()), Math.min(getFullHeight(),handler.getGameHeight()));
 		worldChains = new WorldChains(worldInfo.getWidth(),worldInfo.getHeight());
 	}
 	public abstract void init();
@@ -37,7 +38,7 @@ public abstract class World {
 		}
 		ticking = false;
 	}
-	public void render(Graphics g,float xOffset , float yOffset){
+	public void render(Graphics2D g,float xOffset , float yOffset){
 		renderTiles(g, xOffset, yOffset);
 		renderEntities(g, xOffset, yOffset);
 	}
@@ -49,7 +50,7 @@ public abstract class World {
 			}
 		}
 	}
-	private void renderEntities(Graphics g,float xOffset,float yOffset){
+	private void renderEntities(Graphics2D g,float xOffset,float yOffset){
 		getEntityManager().sortEntities();
 		for( Iterator<Entity>it = getEntityManager().getCurrentEntities();it.hasNext();){
 			Entity e = it.next();

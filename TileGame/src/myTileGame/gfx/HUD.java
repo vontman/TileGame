@@ -1,5 +1,5 @@
 package myTileGame.gfx;
 
-public class UI {
+public class HUD {
 
 }
