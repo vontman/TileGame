@@ -15,13 +15,15 @@ public class LightMap {
 	private List<Light>lights;
 	private Handler handler;
 	private int[]pixels;
-	private int l;
+	private float[]lightAtPoint;
+	private int width,height;
 	public LightMap(Handler handler) {
 		this.handler = handler;
-		lightMap = new BufferedImage(handler.getGameWidth(),handler.getGameHeight(),BufferedImage.TYPE_INT_ARGB);
+		width = handler.getGameWidth();
+		height = handler.getGameHeight();
+		lightMap = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		pixels = ((DataBufferInt)lightMap.getRaster().getDataBuffer()).getData();
 		lights = new ArrayList<Light>();
-		l = pixels.length;
 	}
 	public void addLight( float x,float y,float radius,float lightPower ){
 		Light light = new Light(x,y,radius,lightPower);
@@ -37,12 +39,13 @@ public class LightMap {
 	}
 	
 	public void tick(){
+		lightAtPoint = new float[width*height];
 		for(Light l : lights){
 			l.tick();
 		}
 	}
 	private void invertAlpha(){
-		for(int i=0;i<l;i++){
+		for(int i=0;i<width*height;i++){
 			Color color = new Color(pixels[i],true);
 			pixels[i] = new Color(
 					color.getRed(),
@@ -52,18 +55,32 @@ public class LightMap {
 					).getRGB();
 		}
 	}
-	public void render(Graphics2D g,float xOffset,float yOffset){
-		Graphics2D g2 = (Graphics2D) lightMap.getGraphics();
-		g2.setBackground(new Color(0,0,0,0));
-		g2.clearRect(0, 0, handler.getGameWidth(), handler.getGameHeight());
-		for(Light l : lights){
-//			l.render(g2, xOffset, yOffset);
-			g2.drawImage(l.getImage(), (int)(l.getX()-xOffset), (int)(l.getY()-yOffset), null);
+	private void distributeLight(float xOffset,float yOffset){
+		for(int i=0;i<width*height;i++){
+			for(Light l : lights){
+				int ty = i/width;
+				int tx = i -ty*width; 
+				int lx = (int)(l.getX()-xOffset);
+				int ly = (int)(l.getY()-yOffset);
+				if((ty-ly)*(ty-ly) + (tx-lx)*(tx-lx) <= l.getRadius()*l.getRadius()){
+					lightAtPoint[i] += l.getPower()*(l.getRadius()-Math.sqrt((ty-ly)*(ty-ly) + (tx-lx)*(tx-lx)))/l.getRadius();
+				}
+			}
+			lightAtPoint[i] = Math.min(lightAtPoint[i], 1f);
 		}
-		invertAlpha();
-		g2.dispose();
-		lightMap.flush();
-		
+		for(int i=0;i<width*height;i++){
+			pixels[i] = new Color(
+					0,
+					0,
+					0,
+					1f-lightAtPoint[i]
+					).getRGB();
+		}
+	}
+	public void render(Graphics2D g,float xOffset,float yOffset){
+//		
+//		invertAlpha();
+		distributeLight(xOffset,yOffset);
 		g.drawImage(lightMap,0,0,null);
 	}
 }
