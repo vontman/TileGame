@@ -15,9 +15,9 @@ import myTileGame.states.GameState;
 import myTileGame.states.State;
 
 public class Game implements Runnable{
-	public final static String GAME_NAME = "MyTileGame";
-	private final double FPS = 60;
-	private final double UPS = 90;
+	public static final String GAME_NAME = "MyTileGame";
+	public static final double FPS = 90;
+	public static final double UPS = 60;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
@@ -30,6 +30,8 @@ public class Game implements Runnable{
 	private Thread thread;
 	private boolean running;
 	private long ticks;
+	
+	private BufferStrategy bs;
 	public Game(int width,int height){
 		this.width = width;
 		this.height = height;
@@ -46,12 +48,11 @@ public class Game implements Runnable{
 		camera.tick();
 	}
 	public void render(){
-		BufferStrategy bs = gui.getCanvas().getBufferStrategy();
 		if(bs == null){
 			gui.getCanvas().createBufferStrategy(3);
-			return;
+			bs = gui.getCanvas().getBufferStrategy();
 		}
-		Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.clearRect(0, 0,width, height);
 		
