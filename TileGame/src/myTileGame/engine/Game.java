@@ -17,7 +17,7 @@ import myTileGame.states.State;
 public class Game implements Runnable{
 	public static final String GAME_NAME = "MyTileGame";
 	public static final double FPS = 90;
-	public static final double UPS = 60;
+	public static final double UPS = 90;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
@@ -53,7 +53,7 @@ public class Game implements Runnable{
 			bs = gui.getCanvas().getBufferStrategy();
 		}
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.clearRect(0, 0,width, height);
 		
 		if(State.getCurrentState() != null)

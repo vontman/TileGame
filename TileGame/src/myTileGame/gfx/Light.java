@@ -17,7 +17,7 @@ public class Light {
 	public Light(float x,float y,float radius,float power) {
 		this.x = x;
 		this.y = y;
-		this.radius = radius;
+		this.radius = radius/LightMap.SCALE;
 		this.power = Math.min(1F, power);
 		init();
 	}
@@ -54,7 +54,7 @@ public class Light {
 	public void tick(){
 		if(entity == null)
 			return;
-		x = (float) entity.getBounds().getCenterX();
-		y = (float) entity.getBounds().getCenterY();
+		x = (float) entity.getBounds().getCenterX()/LightMap.SCALE;
+		y = (float) entity.getBounds().getCenterY()/LightMap.SCALE;
 	}
 }

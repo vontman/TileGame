@@ -13,7 +13,7 @@ import myTileGame.Utils;
 import myTileGame.objects.entites.Entity;
 
 public class LightMap {
-	private static final int SCALE = 1;
+	public static final int SCALE = 1;
 	private BufferedImage lightMap;
 	private List<Light>lights;
 	private Handler handler;
@@ -87,11 +87,11 @@ public class LightMap {
 		g.clearRect(0,0, width, height);
 		g.setComposite(AlphaComposite.DstOut);
 		for(Light l : lights){
-			g.drawImage(l.getImage(), (int)(l.getX()-l.getRadius()-xOffset), (int)(l.getY()-l.getRadius()-yOffset), null);
+			g.drawImage(l.getImage(), (int)(l.getX()-l.getRadius()-xOffset/SCALE), (int)(l.getY()-l.getRadius()-yOffset/SCALE), null);
 		}
 		g.dispose();
 		lightMap.flush();
 		
-		g2.drawImage(lightMap,0,0,null);
+		g2.drawImage(lightMap,0,0,handler.getGameWidth(),handler.getGameHeight(),null);
 	}
 }
