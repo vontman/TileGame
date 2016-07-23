@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Area;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class Player extends Creature {
 	public static int BOUNDS_HEIGHT = 22;
 	public static int START_HP = 20;
 	private int superSpeed;
+	
 	// directions
 	private boolean up, down, left, right;
 
@@ -38,18 +40,21 @@ public class Player extends Creature {
 	private Weapon weapon;
 	private Map<Entity, Boolean> wepTargets;
 
-	Weapon[] weps;
-	int currWep = 0;
+//	private Weapon[] weps;
+	private ArrayList<Weapon> weps;
+	private int currWep ;
 
 	public Player(Handler handler, float x, float y, int speed, int superSpeed) {
 		super(handler, x, y, WIDTH, HEIGHT, speed, START_HP, BOUNDS_X, BOUNDS_Y, BOUNDS_WIDTH, BOUNDS_HEIGHT,
 				Assets.player);
 		this.superSpeed = superSpeed;
 
-		this.leftAnimation.setDelay(80);
-		this.rightAnimation.setDelay(80);
-		this.upAnimation.setDelay(80);
-		this.downAnimation.setDelay(80);
+//		this.leftAnimation.setDelay(80);
+//		this.rightAnimation.setDelay(80);
+//		this.upAnimation.setDelay(80);
+//		this.downAnimation.setDelay(80);
+		
+		this.animationManager.setDelay(80);
 
 		this.wepAnchorUp = new Point(width / 2, 20);
 		this.wepAnchorDown = new Point(width / 2, height - 10);
@@ -57,9 +62,16 @@ public class Player extends Creature {
 		this.wepAnchorRight = new Point(bounds.x + bounds.width - 5, 28);
 		this.wepTargets = new HashMap<Entity, Boolean>();
 		
-		handler.addLight(this, 300, .9F);
-		equip(new FlameSword());
-		weps = new Weapon[] { new FlameSword(), new ShortSword(), new LongSword(), new ArmedSword() };
+//		equip(new FlameSword());
+
+		weps = new ArrayList<Weapon>();
+		currWep = 0;
+
+		handler.addLight(this, 200, .7F);
+		addWep( new FlameSword() );
+		addWep( new ShortSword() );
+		addWep( new LongSword() );
+		addWep( new ArmedSword() );
 	}
 
 	@Override
@@ -95,8 +107,9 @@ public class Player extends Creature {
 		}
 		if (km.shift) {
 			currWep++;
-			currWep %= weps.length;
-			equip(weps[currWep]);
+			if( currWep >= weps.size() )
+				currWep -= weps.size();
+			equip(currWep);
 
 			moveX *= superSpeed;
 			moveY *= superSpeed;
@@ -118,7 +131,7 @@ public class Player extends Creature {
 
 		// attacking
 		if (km.attack) {
-			if (!isAttacking) {
+			if (!isAttacking && this.weapon != null) {
 				isAttacking = true;
 				lastAttack = System.currentTimeMillis();
 				wepTargets.clear();
@@ -203,6 +216,15 @@ public class Player extends Creature {
 		if (weapon != null && state == DOWN) {
 			weapon.render(g, xOffset, yOffset, this, System.currentTimeMillis() - lastAttack);
 		}
+	}
+
+	public void addWep(Weapon weapon){
+		weps.add(weapon);
+	}
+	public void equip(int weapon) {
+		if ( weapon < 0 || weapon >= weps.size() )
+			return;
+		equip(weps.get(weapon));
 	}
 
 	public void equip(Weapon weapon) {

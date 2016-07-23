@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 import myTileGame.Handler;
 import myTileGame.entites.objects.creatures.Player;
-import myTileGame.gfx.LightMap;
+import myTileGame.gfx.light.LightMap;
 import myTileGame.world.TestWorld;
 import myTileGame.world.World;
 

@@ -1,4 +1,4 @@
-package myTileGame.gfx;
+package myTileGame.gfx.light;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

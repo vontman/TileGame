@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.entites.objects.creatures.Creature;
-import myTileGame.gfx.Animation;
 import myTileGame.gfx.Assets;
+import myTileGame.gfx.animation.Animation;
 import myTileGame.objects.entites.Entity;
 
 public abstract class Projectile extends Entity{

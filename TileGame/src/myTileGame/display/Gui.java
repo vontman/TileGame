@@ -25,14 +25,15 @@ public class Gui {
 		frame.addKeyListener(handler.getGame().getKeyManager());
 		
 		canvas = new Canvas();
-		frame.setResizable(false);
 		canvas.setFocusable(false);
+		frame.setResizable(false);
 		frame.add(canvas);
 
+		setSize(width,height);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
-		setSize(width,height);
 	}
 	public Canvas getCanvas(){
 		return canvas;

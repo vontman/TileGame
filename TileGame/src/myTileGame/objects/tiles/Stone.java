@@ -19,13 +19,14 @@ public class Stone extends Tile{
 		return true;
 	}
 	public void tick(){
-		ticker++;
-		if(ticker % 90 < 45){
-			this.img = Assets.stone;
-		}
-		else {
-			this.img = Assets.grass;
-		}
+		//Tile Simple Animation Test
+//		ticker++;
+//		if(ticker % 90 < 45){
+//			this.img = Assets.stone;
+//		}
+//		else {
+//			this.img = Assets.grass;
+//		}
 	}
 
 }

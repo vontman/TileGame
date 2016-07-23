@@ -2,6 +2,7 @@ package myTileGame.gfx;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -9,8 +10,10 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
 	public static BufferedImage loadImage(String path){
 		try{
-			
-			return ImageIO.read(ImageLoader.class.getResource(path));
+
+//			return ImageIO.read(ImageLoader.class.getResource(path));
+//			System.out.println(path);
+			return ImageIO.read(new File("res"+path.toLowerCase()));
 		}catch(IOException e){
 			e.printStackTrace();
 			System.exit(1);

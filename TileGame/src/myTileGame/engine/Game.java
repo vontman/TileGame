@@ -1,7 +1,6 @@
 package myTileGame.engine;
 
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 
 import myTileGame.Handler;
@@ -17,7 +16,7 @@ import myTileGame.states.State;
 public class Game implements Runnable{
 	public static final String GAME_NAME = "MyTileGame";
 	public static final double FPS = 90;
-	public static final double UPS = 90;
+	public static final double UPS = 60;
 	private Handler handler ;
 	private Camera camera;
 	private KeyManager keyManager;
@@ -76,6 +75,7 @@ public class Game implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
 	public void run() {
 		init();
@@ -155,11 +155,6 @@ public class Game implements Runnable{
 	public DrawEngine getDrawEngine(){
 		return drawEngine;
 	}
-//	public void setSize(int width,int height) {
-//		this.width = width;
-//		this.height = height;
-//		gui.setSize(width, height);
-//	}
 	public Camera getCamera() {
 		return camera;
 	}

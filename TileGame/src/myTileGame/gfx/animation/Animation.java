@@ -1,4 +1,4 @@
-package myTileGame.gfx;
+package myTileGame.gfx.animation;
 
 import java.awt.image.BufferedImage;
 

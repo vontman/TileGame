@@ -1,4 +1,4 @@
-package myTileGame.gfx;
+package myTileGame.gfx.light;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -78,7 +78,10 @@ public class LightMap {
 		}
 		for(int i=0;i<width*height;i++){
 			pixels[i] = new Color(
-					0,0,0,1f-lightAtPoint[i]
+					255,
+					255,
+					255,
+					lightAtPoint[i]
 					).getRGB();
 		}
 	}

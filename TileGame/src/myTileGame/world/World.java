@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.gfx.Assets;
-import myTileGame.gfx.LightMap;
+import myTileGame.gfx.light.LightMap;
 import myTileGame.objects.entites.Entity;
 import myTileGame.objects.entites.EntityManager;
 import myTileGame.objects.tiles.Tile;
@@ -34,7 +34,7 @@ public abstract class World {
 		
 		Tile.tickTiles();
 		
-		for( Iterator<Entity>it = getEntityManager().getCurrentEntities();it.hasNext();){
+		for( Iterator<Entity>it = getEntityManager().getCurrentEntities(); it.hasNext(); ){
 			Entity e = it.next();
 			e.tick();
 		}

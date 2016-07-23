@@ -7,22 +7,24 @@ import java.util.Iterator;
 
 import myTileGame.Handler;
 import myTileGame.Utils;
-import myTileGame.gfx.Animation;
 import myTileGame.gfx.Assets;
+import myTileGame.gfx.animation.AnimationManager;
 import myTileGame.objects.entites.Entity;
 import myTileGame.objects.tiles.Tile;
 
 public abstract class Creature extends Entity{
 	public static final int ANIMATION_DELAY = 300;
+	public static final int ANIMATION_DELAY_RUNNING = 200;
 	public static final int UP = 0;
 	public static final int DOWN = 1;
 	public static final int LEFT = 2;
 	public static final int RIGHT = 3;
 	
-	protected Animation upAnimation;
-	protected Animation downAnimation;
-	protected Animation leftAnimation;
-	protected Animation rightAnimation;
+//	protected Animation upAnimation;
+//	protected Animation downAnimation;
+//	protected Animation leftAnimation;
+//	protected Animation rightAnimation;
+	protected AnimationManager animationManager;	
 	protected int state ;
 	protected int counterState;
 	protected int speed;
@@ -52,10 +54,25 @@ public abstract class Creature extends Entity{
 		this.speed = speed;
 		this.hp = hp;
 		this.fullHp = hp;
-		upAnimation = new Animation(img[Assets.UP_INDEX],ANIMATION_DELAY);
-		downAnimation = new Animation(img[Assets.DOWN_INDEX],ANIMATION_DELAY);
-		leftAnimation = new Animation(img[Assets.LEFT_INDEX],ANIMATION_DELAY);
-		rightAnimation = new Animation(img[Assets.RIGHT_INDEX],ANIMATION_DELAY);
+//		upAnimation = new Animation(img[Assets.UP_INDEX],ANIMATION_DELAY);
+//		downAnimation = new Animation(img[Assets.DOWN_INDEX],ANIMATION_DELAY);
+//		leftAnimation = new Animation(img[Assets.LEFT_INDEX],ANIMATION_DELAY);
+//		rightAnimation = new Animation(img[Assets.RIGHT_INDEX],ANIMATION_DELAY);
+		animationManager = new AnimationManager(
+				new BufferedImage[][]{
+					img[Assets.UP_INDEX],
+					img[Assets.DOWN_INDEX],
+					img[Assets.LEFT_INDEX],
+					img[Assets.RIGHT_INDEX]
+				},
+				ANIMATION_DELAY,
+				new int[]{
+					UP,
+					DOWN,
+					LEFT,
+					RIGHT
+				}
+				);
 		isAttacking = false;
 		state = 0;
 	}
@@ -74,10 +91,15 @@ public abstract class Creature extends Entity{
 
 	}
 	public void updatePos(){
-		if( !isAttacked )
+		if( !isAttacked  )
 			return;
 		if( xThrow == 0 && yThrow == 0 && aboveGround == 0 ){
 			isAttacked = false;
+			return;
+		}
+		if( isDead ){
+			if( aboveGround > 0 )
+				aboveGround = 0;
 			return;
 		}
 		if(!isFalling){
@@ -128,17 +150,17 @@ public abstract class Creature extends Entity{
 				isFalling = true;
 		}
 	}
-	public Animation getCurrAnimation(){
-		if( state == UP )
-			return upAnimation;
-		if( state == DOWN )
-			return downAnimation;
-		if( state == LEFT )
-			return leftAnimation;
-		if( state == RIGHT )
-			return rightAnimation;
-		return downAnimation;
-	}
+//	public Animation getCurrAnimation(){
+//		if( state == UP )
+//			return upAnimation;
+//		if( state == DOWN )
+//			return downAnimation;
+//		if( state == LEFT )
+//			return leftAnimation;
+//		if( state == RIGHT )
+//			return rightAnimation;
+//		return downAnimation;
+//	}
 	public void move(float moveX, float moveY) {
 		colliding = false;
 		
@@ -242,11 +264,15 @@ public abstract class Creature extends Entity{
 	}
 	
 	public void tick(){
-		if( hp == 0 )
+		if( isDead || hp == 0 ){
 			isDead = true;
+			return;
+		}
 		jump();
 		updatePos();
-
+		tickSwimming();
+	}
+	private void tickSwimming() {
 		//check if swimming
 		int x = (int)this.x + bounds.x;
 		int y = (int)this.y + bounds.y;
@@ -261,14 +287,53 @@ public abstract class Creature extends Entity{
 		}else
 			isSwimming = false;
 	}
+
 	public void render(Graphics2D g,float xOffset,float yOffset){
+		//Dead Pool
 		if(isDead()){
-			g.setColor(Color.red);
+			g.setColor(new Color(150 , 0 , 0, 150) );
 			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
 			
 			return;
 		}
+		renderUtils(g,xOffset,yOffset);
 		
+//		BufferedImage img = getCurrAnimation().getCurrentImage(moving);
+		BufferedImage img = animationManager.getCurrImage(getState(), moving);
+		if(!isSwimming)
+			g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset-aboveGround),width,height, null);
+		else{
+			yOffset = renderSwimming(g, xOffset, yOffset);
+			g.drawImage(img.getSubimage(0,0,img.getWidth(), img.getHeight()/2), (int)(x-xOffset), (int)(y-yOffset),width,height/2, null);
+		}
+
+
+		
+		//bounds
+//		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
+	}
+
+	public float renderSwimming(Graphics2D g,float xOffset,float yOffset){
+		//move up and down in water :3 , cool effect :3
+		if( handler.getGame().getTicks()%60 < 45 ){
+			yOffset++;
+		}
+		else if( handler.getGame().getTicks()%60 >= 45){
+			yOffset--;
+		}
+		//adds a water whirling effect :3s
+		g.setColor(Color.white);
+		if( handler.getGame().getTicks()%90 < 30){
+			g.drawOval((int)(x-xOffset+5), (int)(y-yOffset+10),width-10,height/2-5);
+		}
+		else if( handler.getGame().getTicks()%90 < 60 ){
+			g.drawOval((int)(x-xOffset+5-2), (int)(y-yOffset+10-2),width-6,height/2-1);
+		}else{
+			g.drawOval((int)(x-xOffset+5-4), (int)(y-yOffset+10-4),width-2,height/2+3);
+		}
+		return yOffset;
+	}
+	public void renderUtils(Graphics2D g,float xOffset,float yOffset){
 		//hp bar
 		g.setColor(Color.red);
 		g.fillRect((int)(x-xOffset), (int)(y-4-yOffset-aboveGround), width, 4);
@@ -283,35 +348,6 @@ public abstract class Creature extends Entity{
 			g.fillOval((int)(x+width/4-xOffset), (int)(y+height-10-yOffset), width/2, 10);
 		}		
 		
-		BufferedImage img = getCurrAnimation().getCurrentImage(moving);
-		if(!isSwimming)
-			g.drawImage(img, (int)(x-xOffset), (int)(y-yOffset-aboveGround),width,height, null);
-		else{
-			//move up and down in water :3 , cool effect :3
-			if( handler.getGame().getTicks()%60 < 45 ){
-				yOffset++;
-			}
-			else if( handler.getGame().getTicks()%60 >= 45){
-				yOffset--;
-			}
-			//adds a water whirling effect :3s
-			g.setColor(Color.white);
-			if( handler.getGame().getTicks()%90 < 30){
-				g.drawOval((int)(x-xOffset+5), (int)(y-yOffset+10),width-10,height/2-5);
-			}
-			else if( handler.getGame().getTicks()%90 < 60 ){
-				g.drawOval((int)(x-xOffset+5-2), (int)(y-yOffset+10-2),width-6,height/2-1);
-			}else{
-				g.drawOval((int)(x-xOffset+5-4), (int)(y-yOffset+10-4),width-2,height/2+3);
-			}
-			g.drawImage(img.getSubimage(0,0,img.getWidth(), img.getHeight()/2), (int)(x-xOffset), (int)(y-yOffset),width,height/2, null);
-			
-		}
-
-
-		
-		//bounds
-//		g.fillRect((int)(x-xOffset+bounds.x), (int)(y-yOffset+bounds.y),bounds.width,bounds.height);
 	}
 	protected void moveRandomly(){
 		int moveX = 0;
