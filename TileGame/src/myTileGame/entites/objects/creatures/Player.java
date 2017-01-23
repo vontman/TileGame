@@ -81,35 +81,37 @@ public class Player extends Creature {
 		up = down = left = right = false;
 		int moveX = 0;
 		int moveY = 0;
-		if (km.left) {
+		if (km.getKeyPress("left")) {
 			moveX--;
 			if (!isAttacking)
 				state = LEFT;
 			left = true;
 		}
-		if (km.right) {
+		if (km.getKeyPress("right")) {
 			moveX++;
 			if (!isAttacking)
 				state = RIGHT;
 			right = true;
 		}
-		if (km.up) {
+		if (km.getKeyPress("up")) {
 			moveY--;
 			if (!isAttacking)
 				state = UP;
 			up = true;
 		}
-		if (km.down) {
+		if (km.getKeyPress("down")) {
 			moveY++;
 			if (!isAttacking)
 				state = DOWN;
 			down = true;
 		}
-		if (km.shift) {
+		if (km.getKeyPress("switch")) {
 			currWep++;
 			if( currWep >= weps.size() )
 				currWep -= weps.size();
 			equip(currWep);
+		} 
+		if (km.getKeyPress("sprint")) {
 
 			moveX *= superSpeed;
 			moveY *= superSpeed;
@@ -120,7 +122,7 @@ public class Player extends Creature {
 		move(moveX, moveY);
 
 		// jumping
-		if (km.space && !isJumping) {
+		if (km.getKeyPress("jump") && !isJumping) {
 			isJumping = true;
 			jumpHeight = 10;
 		}
@@ -130,7 +132,7 @@ public class Player extends Creature {
 			isAttacking = false;
 
 		// attacking
-		if (km.attack) {
+		if (km.getKeyPress("btn1")) {
 			if (!isAttacking && this.weapon != null) {
 				isAttacking = true;
 				lastAttack = System.currentTimeMillis();
@@ -138,7 +140,7 @@ public class Player extends Creature {
 			}
 		}
 		attack();
-		if (km.getMessile()) {
+		if (km.getKeyPress("btn2")) {
 			moveX = 0;
 			moveY = 0;
 			if (up)

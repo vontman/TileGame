@@ -28,7 +28,8 @@ public class Game implements Runnable{
 	private int width;
 	private Thread thread;
 	private boolean running;
-	private long ticks;
+	private boolean paused;
+	private int ticks;
 	
 	private BufferStrategy bs;
 	public Game(int width,int height){
@@ -37,14 +38,18 @@ public class Game implements Runnable{
 		start();
 	}
 	public void tick(){
-		ticks++;
-		keyManager.tick();
-
-		if(State.getCurrentState() != null)
-			State.getCurrentState().tick();
-		
-		drawEngine.tick();
-		camera.tick();
+		if(paused){
+			
+		}else{
+			ticks++;
+			keyManager.tick();
+	
+			if(State.getCurrentState() != null)
+				State.getCurrentState().tick();
+			
+			drawEngine.tick();
+			camera.tick();
+		}
 	}
 	public void render(){
 		if(bs == null){
@@ -74,6 +79,12 @@ public class Game implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	public synchronized void pause(){
+		paused = true;
+	}
+	public synchronized void resume(){
+		paused = false;
 	}
 	
 	@Override
@@ -128,7 +139,7 @@ public class Game implements Runnable{
 		Tile.init();
 		
 		handler = new Handler(this);
-		keyManager = new KeyManager();
+		keyManager = new KeyManager(handler);
 		gui = new Gui(handler);
 		camera = new Camera(handler);
 		collisionSensor = new CollisionSensor(handler);
@@ -143,7 +154,7 @@ public class Game implements Runnable{
 	public CollisionSensor getCollisionSensor(){
 		return collisionSensor;
 	}
-	public long getTicks(){
+	public int getTicks(){
 		return ticks;
 	}
 	public int getHeight() {

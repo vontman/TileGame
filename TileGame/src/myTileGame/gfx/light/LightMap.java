@@ -86,6 +86,7 @@ public class LightMap {
 		}
 	}
 	public void render(Graphics2D g2,float xOffset,float yOffset){
+		
 		g = (Graphics2D) lightMap.getGraphics();
 		g.clearRect(0,0, width, height);
 		g.setComposite(AlphaComposite.DstOut);
