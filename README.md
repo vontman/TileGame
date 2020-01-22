@@ -2,4 +2,4 @@
 
 Simple game engine developed in Java.
 
-![](https://gfycat.com/giddyartisticargusfish)
+![](https://media.giphy.com/media/U4RvCCjDQYRymo3ceA/giphy.gif)
